@@ -1,0 +1,7 @@
+<**/src/**>: include
+<**/lib/**>: include
+<**/test.*>: package(oUnit)
+
+true: package(core,ppx_jane,core_bench)
+true: thread,debug
+true: bin_annot

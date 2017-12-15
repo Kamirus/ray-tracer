@@ -1,0 +1,8 @@
+*.byte
+*.native
+*.cmo
+tmp.*
+
+_build/
+
+.ocamlinit_tmp
