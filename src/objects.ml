@@ -35,7 +35,8 @@ module Plane : OBJECT
     let pr = Ray.point ray
     and d = Ray.direction ray in
     let d_dot_n = Vector.dot d n in
-    if d_dot_n < Util.epsilon then None (* 90deg, we want just one point *)
+    if abs_float d_dot_n < Util.epsilon 
+    then None (* 90deg, we want just one point *)
     else 
       let pp_dot_n = Vector.dot pp n
       and pr_dot_n = Vector.dot pr n in
