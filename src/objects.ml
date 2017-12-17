@@ -14,7 +14,7 @@ end
 let create_instance (type a) (module O : OBJECT with type t = a) t = 
   (module struct 
     module Object = O
-    let this = t
+    let this = O.create t
   end : OBJECT_INSTANCE)
 
 (* --- *)
@@ -59,7 +59,7 @@ module Sphere : OBJECT
     and b = 2. *. Vector.dot d p
     and c = Vector.length2 p -. sqrt r in
 
-    let delta = sqrt b -. 4. *. a *. c in
+    let delta = b ** 2. -. 4. *. a *. c in
 
     if delta < 0. then None
     else

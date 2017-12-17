@@ -1,6 +1,7 @@
 module type SCREEN = sig
   type t
 
+  val create : t -> t
   val pixel_position : t -> int -> int -> Point.t option
   val pixel_ray : t -> int -> int -> Ray.t option
 end
@@ -10,6 +11,9 @@ module NoPerspectiveFixedScreen : SCREEN
   with type t = int * int
 = struct
   type t = int * int
+
+  let create (x_max, y_max) =
+    (x_max, y_max)
 
   let pixel_position (x_max, y_max) x y = 
     if 0 <= x && x < x_max && 0 <= y && y < y_max

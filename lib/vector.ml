@@ -22,7 +22,8 @@ let neg (x, y, z) =
   (-.x, -.y, -.z)
 
 let length2 (x, y, z) = 
-  sqrt x +. sqrt y +. sqrt z
+  let f x = x |> abs_float |> sqrt in
+  f x +. f y +. f z
 
 let length t = 
   t |> length2 |> sqrt

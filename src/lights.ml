@@ -14,7 +14,7 @@ end
 let create_instance (type a) (module L : LIGHT with type t = a) t = 
   (module struct 
     module Light = L
-    let this = t
+    let this = L.create t
   end : LIGHT_INSTANCE)
 
 (* --- *)
