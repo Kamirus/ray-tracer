@@ -57,7 +57,7 @@ module Sphere : OBJECT
 
     let a = Vector.length2 d
     and b = 2. *. Vector.dot d p
-    and c = Vector.length2 p -. sqrt r in
+    and c = Vector.length2 p -. r *. r in
 
     let delta = b ** 2. -. 4. *. a *. c in
 
