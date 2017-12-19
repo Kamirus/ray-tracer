@@ -1,7 +1,7 @@
 open Graphics
 
 let calc_color x y = 
-  match Raytracers.SimpleRayTracer.calc_color Testdata.tracer x y with
+  match Raytracers.RayTracerWithPerspectiveScreen.calc_color Testdata.tracer x y with
   | None -> Color.create 100 100 100 |> Color.values
   | Some c -> Color.values c
 

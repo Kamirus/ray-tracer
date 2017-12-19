@@ -17,3 +17,5 @@ module MakeRayTracer
 end
 
 module SimpleRayTracer = MakeRayTracer (Screens.NoPerspectiveFixedScreen) (Structures.ListStructure)
+
+module RayTracerWithPerspectiveScreen = MakeRayTracer (Screens.PerspectiveScreen) (Structures.ListStructure)

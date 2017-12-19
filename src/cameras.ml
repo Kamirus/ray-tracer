@@ -8,6 +8,7 @@ module type CAMERA = sig
   val shoot : t -> float * float -> Ray.t
 end
 
+
 type camera_t = Point.t * Vector.t * float
 
 module Camera : CAMERA
@@ -26,5 +27,5 @@ module Camera : CAMERA
     (* destination xy point *)
     let xy = Vector.add sc sc_to_xy in
     (* ray from c to xy *)
-    Ray.create c xy
+    Ray.create c (Vector.sub xy c)
 end

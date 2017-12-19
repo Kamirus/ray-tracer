@@ -1,6 +1,10 @@
-let screen = Screens.NoPerspectiveFixedScreen.create (800, 600)
-
 module Ss = Structures
+
+(* let screen = Screens.NoPerspectiveFixedScreen.create (800, 600) *)
+let camera = Cameras.Camera.create 
+    (Point.create_ints 400 300 (-1000), Vector.create_ints 0 0 1, 1000.)
+let screen = Screens.PerspectiveScreen.create 
+    (camera, 800, 600, 1.)
 
 let structure = 
   let light = Lights.create_instance (module Lights.Sun)
@@ -12,4 +16,6 @@ let structure =
   Ss.ListStructure.create
     { Ss.lights = [light]; Ss.objects = [plane; sphere] }
 
-let tracer = Raytracers.SimpleRayTracer.create screen structure
+(* let tracer = Raytracers.SimpleRayTracer.create screen structure *)
+let tracer = Raytracers.RayTracerWithPerspectiveScreen.create
+    screen structure
