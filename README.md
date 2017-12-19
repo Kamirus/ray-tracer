@@ -6,7 +6,7 @@
 - [ ] configuration file
 - [ ] raport
 - [ ] documentation - .mli's
-- [ ] perspective camera
+- [x] perspective camera
 
 ### Other features
 - [ ] configurable screen (position, resolution)
@@ -27,6 +27,6 @@
 - [x] sqrt vs ** 2.
 
 ## Questions
- - [ ] adding colors above max 255 val (online rendering)
- - [ ] Lights as objects?
- - [ ] Multiple light sources? -> add
+- [ ] adding colors above max 255 val (online rendering)
+- [ ] Lights as objects?
+- [ ] Multiple light sources? -> add

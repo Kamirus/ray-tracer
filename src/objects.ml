@@ -3,6 +3,7 @@ module type OBJECT = sig
 
   val create : t -> t
   val get_color : t -> Color.t
+  val normal : t -> Point.t -> Vector.t
   val intersect : t -> Ray.t -> float option
 end
 
@@ -31,6 +32,11 @@ module Plane : OBJECT
     (point, Vector.normalize vector, color)
   let get_color (_, _, c) = 
     c
+  let normal (pp, v, _) p =
+    let pp_to_p = Vector.sub p pp in
+    if Vector.dot v pp_to_p < 0.
+    then v
+    else Vector.mul (-1.) v
   let intersect (pp, n, _) ray = 
     let pr = Ray.point ray
     and d = Ray.direction ray in
@@ -51,7 +57,10 @@ module Sphere : OBJECT
 
   let create (center, radius, color) = 
     (center, radius, color)
-  let get_color (_, _, c) = c
+  let get_color (_, _, c) = 
+    c
+  let normal (c, r, _) p = 
+    Vector.sub p c |> Vector.normalize
   let intersect (center, r, _) ray =
     let d = Ray.direction ray
     and p = Vector.sub (Ray.point ray) center in
