@@ -8,7 +8,7 @@ val create_ints : int -> int -> int -> t
 val length : t -> float
 
 val length2 : t -> float
-(**[length2 t] same as (length t) ** 2. *)
+(** [length2 t] same as (length t) ** 2. *)
 
 val normalize : t -> t
 

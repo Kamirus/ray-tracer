@@ -29,9 +29,3 @@ module NoPerspectiveFixedScreen : SCREEN
       Some (Ray.create p v)
 end
 
-
-module PerspectiveScreen : SCREEN
-  with type t = 
-= struct
-
-end
