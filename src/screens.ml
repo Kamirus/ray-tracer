@@ -28,3 +28,10 @@ module NoPerspectiveFixedScreen : SCREEN
       let v = Vector.create 0. 0. 1. in
       Some (Ray.create p v)
 end
+
+
+module PerspectiveScreen : SCREEN
+  with type t = 
+= struct
+
+end

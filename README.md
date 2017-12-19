@@ -1,21 +1,32 @@
 # Ray Tracer
 
 ## TODO
- - [ ] *(P0)* configuration file
- - [ ] *(P0)* raport
- - [ ] *(P0)* documentation - .mli's
- - [ ] *(P1)* perspective camera
- - [ ] *(P1)* configurable screen (position, resolution)
- - [ ] *(P1)* simple shading - `Facing Ratio`
- - [ ] *(P1)* decrease in light intensity
- - [ ] *(P1)* new surface type: mirror
- - [ ] *(P1)* mixed surface type 
- - [ ] *(P1)* Gamma correction
- - [ ] *(P1)* better structure - optimization 
- - [ ] *(P2)* plane slice
- - [ ] *(P2)* configurable light color
- 
+
+### Key features
+- [ ] configuration file
+- [ ] raport
+- [ ] documentation - .mli's
+- [ ] perspective camera
+
+### Other features
+- [ ] configurable screen (position, resolution)
+- [ ] simple shading - `Facing Ratio`
+- [ ] decrease in light intensity
+- [ ] new surface type: mirror
+- [ ] mixed surface type 
+- [ ] Gamma correction
+- [ ] better structure - optimization 
+
+### Improvements
+- [ ] extract calculatin color out of structure module
+- [ ] plane slice
+- [ ] configurable light color
+- [ ] rename ray.point to ray.source
+
+### Bugs
+- [x] sqrt vs ** 2.
+
 ## Questions
- - [ ] *(P3)* Lights as objects? 
- - [ ] *(P2)* Multiple light sources? -> add
- - [ ] *(P2)* adding colors above max 255 val (online rendering)
+ - [ ] adding colors above max 255 val (online rendering)
+ - [ ] Lights as objects?
+ - [ ] Multiple light sources? -> add
