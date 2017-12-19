@@ -46,20 +46,27 @@ module ListStructure : STRUCTURE
     aux objects None
 
   let calc_color {lights; objects} ray =
+    (* check if ray hits sth *)
     match closest objects ray with
-    | None -> None
+    | None -> None (* nope *)
     | Some (t, (module I : Os.OBJECT_INSTANCE)) -> 
-      let point = Ray.calc_point ray t in
+      (* ray hit *)
+      let hit_point = Ray.calc_point ray t in
+      (* let rev_ray_direction = Vector.mul (-1.) (Ray.direction ray) in *)
+      (* let obj_normal = I.Object.normal I.this hit_point in *)
       let colors =
         let f (module L : Ls.LIGHT_INSTANCE) =
           let light_point = L.Light.point L.this in
-          let direction = Vector.sub light_point point in
-          let r = Ray.create point direction in
+          let direction = Vector.sub light_point hit_point in
+          let r = Ray.create hit_point direction in
           match closest objects r with
-          | None -> 
+          | None ->
             let sunlight = L.Light.get_color L.this r in
             let objcolor = I.Object.get_color I.this in
-            Some (Color.mul sunlight objcolor)
+            let full_color = Color.mul sunlight objcolor in
+            (* let k = max 0. (Vector.dot obj_normal rev_ray_direction) in *)
+            (* let color = Color.mulf full_color k in *)
+            Some (full_color)
           | Some _ -> None
         in
         Core.Std.List.filter_map ~f lights
