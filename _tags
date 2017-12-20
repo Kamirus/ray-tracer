@@ -1,7 +1,11 @@
 <**/src/**>: include
 <**/lib/**>: include
+
+<**/src/toimage*>: package(camlimages)
+<**/src/cfg*>: package(yojson)
+<**/src/draw*>: package(graphics)
 <**/test.*>: package(oUnit)
 
-true: package(core,ppx_jane,core_bench,graphics,yojson)
+true: package(core,ppx_jane,core_bench)
 true: thread,debug
 true: bin_annot
