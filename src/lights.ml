@@ -2,7 +2,7 @@ module type LIGHT = sig
   type t
 
   val create : t -> t
-  val get_color : t -> Ray.t -> Color.t
+  val get_color : t -> Point.t -> Color.t
   val ray_to_light : t -> Point.t -> Ray.t
 end
 
@@ -36,4 +36,24 @@ module Sun : LIGHT
   let ray_to_light { dir } point =
     Ray.create point (Vector.mul (-.1.) dir)
 end
- 
+
+
+type light_point_t = { source : Point.t
+                     ; color : Color.t
+                     ; intensity : float }
+module LightPoint : LIGHT
+  with type t = light_point_t
+= struct
+  type t = light_point_t
+
+  let create { source; color; intensity } = 
+    { source; color; intensity }
+
+  let get_color { source; color; intensity } p = 
+    let d2 = Vector.sub p source |> Vector.length2 in
+    let k = 4. *. Util.pi *. d2 in
+    Color.mulf color @@ intensity /. k |> Color.fit
+
+  let ray_to_light { source } point =
+    Ray.create point @@ Vector.sub source point
+end

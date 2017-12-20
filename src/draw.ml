@@ -7,9 +7,8 @@ let calc_color x y =
 
 let draw resolution =
   open_graph @@ " " ^ resolution;
-  auto_synchronize false;  
+  (* auto_synchronize false; *)
   clear_graph ();
-  auto_synchronize true;
 
   set_window_title "Ray Tracer @KamilListopad";
 

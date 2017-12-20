@@ -25,9 +25,9 @@ let ray_from_point_to_light point (module L : Ls.LIGHT_INSTANCE) =
 
 (* Assume that point is being lit by L (not blocked by anything)
    calculate the partial color in this position provided by L light *)
-let color_by_single_light { I.ray; I.biased_point; I.color; I.normal } 
+let color_by_single_light { I.biased_point; I.color; I.normal } 
     (module L : Ls.LIGHT_INSTANCE) =
-  let sunlight = L.Light.get_color L.this ray in
+  let sunlight = L.Light.get_color L.this biased_point in
   let full_color = Color.mul sunlight color in
   (* shading *)
   let dir = L.Light.ray_to_light L.this biased_point |> Ray.direction in
