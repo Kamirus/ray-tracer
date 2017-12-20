@@ -19,6 +19,7 @@ let draw resolution =
       plot x y;
     done
   done;
+  synchronize ();
 
   (* loop forever *)
   let rec loop () : unit = 
