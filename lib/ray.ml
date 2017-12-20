@@ -3,7 +3,7 @@ type t = Point.t * Vector.t
 let create p v =
   (p, Vector.normalize v)
 
-let point (p, _) = p
+let source (p, _) = p
 
 let direction (_, v) = v
 

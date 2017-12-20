@@ -4,7 +4,7 @@ type t
     d_max - maximum distance *)
 val create : Point.t -> Vector.t -> t
 
-val point : t -> Point.t
+val source : t -> Point.t
 
 val direction : t -> Vector.t
 

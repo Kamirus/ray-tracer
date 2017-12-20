@@ -38,7 +38,7 @@ module Plane : OBJECT
     then Vector.mul (-1.) v
     else v
   let intersect ((pp, n, c) as t) ray = 
-    let pr = Ray.point ray in
+    let pr = Ray.source ray in
     let raydir_dot_n = Vector.dot n (Ray.direction ray) in
     if abs_float raydir_dot_n < Util.epsilon 
     then None (* 90deg, we want just one point *)
@@ -64,7 +64,7 @@ module Sphere : OBJECT
     Vector.sub p c |> Vector.normalize
   let intersect ((center, r, color) as t) ray =
     let raydir = Ray.direction ray
-    and p = Vector.sub (Ray.point ray) center in
+    and p = Vector.sub (Ray.source ray) center in
 
     let a = Vector.length2 raydir
     and b = 2. *. Vector.dot raydir p
