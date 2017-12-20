@@ -8,7 +8,8 @@ let screen = Screens.PerspectiveScreen.create
 
 let structure = 
   let light = Lights.create_instance (module Lights.Sun)
-      (Point.create_ints 200 600 444) in
+      { Lights.dir = Vector.create 0. (-.1.) 0.; Lights.color = Color.white } in
+  (* (Point.create_ints 200 600 444) in *)
   let plane = Objects.create_instance (module Objects.Plane)
       (Point.create_ints 400 200 444, Vector.create 0. 1. (-.0.1), Color.green) in
   let sphere = Objects.create_instance (module Objects.Sphere)

@@ -15,16 +15,13 @@ module I = Intersection
 (** [facing_ratio color normal dir] apply simple shader
     color - 100% color without shading
     normal - object's normal vector
-    dir - direction of the ray (from light to point) *)
+    dir - direction of the ray (from point to light) *)
 let facing_ratio color normal dir =
-  let neg_ratio = Vector.dot normal dir in
-  let ratio = -.(min 0. neg_ratio) in
+  let ratio = Vector.dot normal dir in
   Color.mulf color ratio
 
 let ray_from_point_to_light point (module L : Ls.LIGHT_INSTANCE) = 
-  let light_point = L.Light.point L.this in
-  let point_to_light = Vector.sub light_point point in
-  Ray.create point point_to_light
+  L.Light.ray_to_light L.this point
 
 (* Assume that point is being lit by L (not blocked by anything)
    calculate the partial color in this position provided by L light *)
@@ -33,10 +30,7 @@ let color_by_single_light { I.ray; I.biased_point; I.color; I.normal }
   let sunlight = L.Light.get_color L.this ray in
   let full_color = Color.mul sunlight color in
   (* shading *)
-  let light_point = L.Light.point L.this in
-  (* let biased_point = Vector.add biased_point (Vector.mul (1.) normal) in *)
-  let light_to_point = Vector.sub biased_point light_point in
-  let dir = Vector.normalize light_to_point in
+  let dir = L.Light.ray_to_light L.this biased_point |> Ray.direction in
   facing_ratio full_color normal dir
 
 (* --- *)
@@ -55,7 +49,7 @@ module ListStructure : STRUCTURE
     cfg
 
   let closest objects ray = 
-    let min ({ I.d = d } as intersection) = function
+    let min ({ I.d } as intersection) = function
       | None -> 
         Some intersection
       | Some { I.d = prev_d } as acc ->
@@ -78,17 +72,16 @@ module ListStructure : STRUCTURE
     (* check if ray hit sth *)
     match closest objects ray with
     | None -> None (* nope *)
-    | Some ({ I.d } as intersection) -> 
-      let hit_point = Ray.calc_point ray d in
+    | Some ({ I.d; I.biased_point } as intersection) -> 
       (* --- *)
       (* TODO: global illumination *)
       (* TODO: reflect (and/or refract) if object surface allows to *)
       (* calc colors from every light and add them *)
       let color_from_lights = 
         let f acc light = 
-          let ray = ray_from_point_to_light hit_point light in
+          let ray = ray_from_point_to_light biased_point light in
           match closest objects ray with
-          | None -> 
+          | None ->
             let c = color_by_single_light intersection light in
             Color.add acc c
           | Some _ -> acc

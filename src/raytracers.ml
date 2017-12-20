@@ -9,8 +9,6 @@ module MakeRayTracer
     { screen; structure }
 
   let calc_color { screen; structure } x y = 
-    if x > 400 && y > 300 
-    then ();
     match Screen.pixel_ray screen x y with
     | None -> 
       failwith "Screen rejected this ray"

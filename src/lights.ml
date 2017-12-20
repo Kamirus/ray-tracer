@@ -2,8 +2,8 @@ module type LIGHT = sig
   type t
 
   val create : t -> t
-  val point : t -> Point.t
   val get_color : t -> Ray.t -> Color.t
+  val ray_to_light : t -> Point.t -> Ray.t
 end
 
 module type LIGHT_INSTANCE = sig
@@ -19,14 +19,21 @@ let create_instance (type a) (module L : LIGHT with type t = a) t =
 
 (* --- *)
 
-type sun_t = Point.t
-
+type sun_t = { dir : Vector.t
+             ; color : Color.t }
 module Sun : LIGHT
   with type t = sun_t
 = struct
   type t = sun_t
 
-  let create center = center
-  let point center = center
-  let get_color center ray = Color.white
+  let create { dir; color } = 
+    let dir = Vector.normalize dir in
+    { dir; color }
+
+  let get_color { color } _ = 
+    color
+
+  let ray_to_light { dir } point =
+    Ray.create point (Vector.mul (-.1.) dir)
 end
+ 

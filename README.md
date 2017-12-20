@@ -9,19 +9,19 @@
 - [x] perspective camera
 
 ### Other features
-- [ ] configurable screen (position, resolution)
-- [x] simple shading - `Facing Ratio`
 - [ ] decrease in light intensity
+- [x] configurable screen (position, resolution)
+- [x] simple shading - `Facing Ratio`
 - [ ] new surface type: mirror
 - [ ] mixed surface type 
 - [ ] Gamma correction
 - [ ] better structure - optimization 
 
 ### Improvements
+- [ ] configurable light color
 - [x] extract calculatin color out of structure module
 - [ ] plane slice
-- [ ] configurable light color
-- [ ] rename ray.point to ray.source
+- [x] rename ray.point to ray.source
 
 ### Bugs
 - [x] sqrt vs ** 2.
