@@ -9,7 +9,7 @@
 - [x] perspective camera
 
 ### Other features
-- [ ] decrease in light intensity
+- [x] decrease in light intensity
 - [x] configurable screen (position, resolution)
 - [x] simple shading - `Facing Ratio`
 - [ ] new surface type: mirror
@@ -18,7 +18,7 @@
 - [ ] better structure - optimization 
 
 ### Improvements
-- [ ] configurable light color
+- [x] configurable light color
 - [x] extract calculatin color out of structure module
 - [ ] plane slice
 - [x] rename ray.point to ray.source
