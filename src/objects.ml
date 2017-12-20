@@ -3,8 +3,8 @@ module type OBJECT = sig
 
   val create : t -> t
   val get_color : t -> Color.t
-  val normal : t -> Point.t -> Vector.t
-  val intersect : t -> Ray.t -> float option
+  (* val normal : t -> Point.t -> Vector.t *)
+  val intersect : t -> Ray.t -> Intersection.t option
 end
 
 module type OBJECT_INSTANCE = sig
@@ -35,19 +35,20 @@ module Plane : OBJECT
   let normal (pp, v, _) p =
     let pp_to_p = Vector.sub p pp in
     if Vector.dot v pp_to_p < 0.
-    then v
-    else Vector.mul (-1.) v
-  let intersect (pp, n, _) ray = 
-    let pr = Ray.point ray
-    and d = Ray.direction ray in
-    let d_dot_n = Vector.dot d n in
-    if abs_float d_dot_n < Util.epsilon 
+    then Vector.mul (-1.) v
+    else v
+  let intersect ((pp, n, c) as t) ray = 
+    let pr = Ray.point ray in
+    let raydir_dot_n = Vector.dot n (Ray.direction ray) in
+    if abs_float raydir_dot_n < Util.epsilon 
     then None (* 90deg, we want just one point *)
     else 
       let pp_dot_n = Vector.dot pp n
       and pr_dot_n = Vector.dot pr n in
-      let t = (pp_dot_n -. pr_dot_n) /. d_dot_n in
-      if Util.valid t then Some t else None
+      let d = (pp_dot_n -. pr_dot_n) /. raydir_dot_n in
+      if not @@ Util.valid d then None
+      else
+        Some (Intersection.create ray d c @@ normal t pr)
 end
 
 module Sphere : OBJECT 
@@ -61,21 +62,26 @@ module Sphere : OBJECT
     c
   let normal (c, r, _) p = 
     Vector.sub p c |> Vector.normalize
-  let intersect (center, r, _) ray =
-    let d = Ray.direction ray
+  let intersect ((center, r, color) as t) ray =
+    let raydir = Ray.direction ray
     and p = Vector.sub (Ray.point ray) center in
 
-    let a = Vector.length2 d
-    and b = 2. *. Vector.dot d p
+    let a = Vector.length2 raydir
+    and b = 2. *. Vector.dot raydir p
     and c = Vector.length2 p -. r *. r in
 
     let delta = b ** 2. -. 4. *. a *. c in
 
     if delta < 0. then None
     else
-      let t1 = (-. b -. sqrt delta) /. (2. *. a) in
-      if Util.valid t1 then Some t1
+      let return d =
+        let hit_point = Ray.calc_point ray d in
+        let normal = normal t hit_point in
+        Some (Intersection.create ray d color normal)
+      in
+      let d1 = (-. b -. sqrt delta) /. (2. *. a) in
+      if Util.valid d1 then return d1
       else
-        let t2 = (-. b +. sqrt delta) /. (2. *. a) in
-        if Util.valid t2 then Some t2 else None
+        let d2 = (-. b +. sqrt delta) /. (2. *. a) in
+        if Util.valid d2 then return d2 else None
 end

@@ -6,7 +6,7 @@ OCB = ocamlbuild $(OCB_FLAGS)
 
 all: basics complex testdata.cmo
 
-basics: vector.cmo point.cmo ray.cmo color.cmo util.cmo
+basics: vector.cmo point.cmo ray.cmo color.cmo util.cmo intersection.cmo
 
 complex: screens.cmo objects.cmo lights.cmo structures.cmo raytracers.cmo
 

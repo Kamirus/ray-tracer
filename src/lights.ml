@@ -26,7 +26,7 @@ module Sun : LIGHT
 = struct
   type t = sun_t
 
-  let create point = point
-  let point point = point
-  let get_color p r = Color.white
+  let create center = center
+  let point center = center
+  let get_color center ray = Color.white
 end

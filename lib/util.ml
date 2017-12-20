@@ -1,4 +1,4 @@
-let epsilon = 0.0001
+let epsilon = 0.001
 let t_max = 1.0e30
 
 let valid t = 

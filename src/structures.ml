@@ -10,6 +10,36 @@ end
 
 module Os = Objects
 module Ls = Lights
+module I = Intersection
+
+(** [facing_ratio color normal dir] apply simple shader
+    color - 100% color without shading
+    normal - object's normal vector
+    dir - direction of the ray (from light to point) *)
+let facing_ratio color normal dir =
+  let neg_ratio = Vector.dot normal dir in
+  let ratio = -.(min 0. neg_ratio) in
+  Color.mulf color ratio
+
+let ray_from_point_to_light point (module L : Ls.LIGHT_INSTANCE) = 
+  let light_point = L.Light.point L.this in
+  let point_to_light = Vector.sub light_point point in
+  Ray.create point point_to_light
+
+(* Assume that point is being lit by L (not blocked by anything)
+   calculate the partial color in this position provided by L light *)
+let color_by_single_light { I.ray; I.biased_point; I.color; I.normal } 
+    (module L : Ls.LIGHT_INSTANCE) =
+  let sunlight = L.Light.get_color L.this ray in
+  let full_color = Color.mul sunlight color in
+  (* shading *)
+  let light_point = L.Light.point L.this in
+  (* let biased_point = Vector.add biased_point (Vector.mul (1.) normal) in *)
+  let light_to_point = Vector.sub biased_point light_point in
+  let dir = Vector.normalize light_to_point in
+  facing_ratio full_color normal dir
+
+(* --- *)
 
 type list_structure_t = 
   { lights  : (module Ls.LIGHT_INSTANCE ) list
@@ -25,52 +55,46 @@ module ListStructure : STRUCTURE
     cfg
 
   let closest objects ray = 
-    let min (t : float) instance = function
+    let min ({ I.d = d } as intersection) = function
       | None -> 
-        Some (t, instance)
-      | Some (prev_t, prev_this) as prev ->
-        if t < prev_t then Some (t, instance)
-        else prev
+        Some intersection
+      | Some { I.d = prev_d } as acc ->
+        if d < prev_d then Some intersection
+        else acc
     in
     let rec aux objects acc = 
       match objects with
       | [] -> acc
-      | (module I : Os.OBJECT_INSTANCE) as instance :: tail ->
-        let t = I.Object.intersect I.this ray in
-        match t with
+      | (module O : Os.OBJECT_INSTANCE) :: tail ->
+        match O.Object.intersect O.this ray with
         | None -> 
           aux tail acc
-        | Some t -> 
-          aux tail @@ min t instance acc
+        | Some intersection -> 
+          aux tail (min intersection acc)
     in
     aux objects None
 
   let calc_color {lights; objects} ray =
-    (* check if ray hits sth *)
+    (* check if ray hit sth *)
     match closest objects ray with
     | None -> None (* nope *)
-    | Some (t, (module I : Os.OBJECT_INSTANCE)) -> 
-      (* ray hit *)
-      let hit_point = Ray.calc_point ray t in
-      (* let rev_ray_direction = Vector.mul (-1.) (Ray.direction ray) in *)
-      (* let obj_normal = I.Object.normal I.this hit_point in *)
-      let colors =
-        let f (module L : Ls.LIGHT_INSTANCE) =
-          let light_point = L.Light.point L.this in
-          let direction = Vector.sub light_point hit_point in
-          let r = Ray.create hit_point direction in
-          match closest objects r with
-          | None ->
-            let sunlight = L.Light.get_color L.this r in
-            let objcolor = I.Object.get_color I.this in
-            let full_color = Color.mul sunlight objcolor in
-            (* let k = max 0. (Vector.dot obj_normal rev_ray_direction) in *)
-            (* let color = Color.mulf full_color k in *)
-            Some (full_color)
-          | Some _ -> None
+    | Some ({ I.d } as intersection) -> 
+      let hit_point = Ray.calc_point ray d in
+      (* --- *)
+      (* TODO: global illumination *)
+      (* TODO: reflect (and/or refract) if object surface allows to *)
+      (* calc colors from every light and add them *)
+      let color_from_lights = 
+        let f acc light = 
+          let ray = ray_from_point_to_light hit_point light in
+          match closest objects ray with
+          | None -> 
+            let c = color_by_single_light intersection light in
+            Color.add acc c
+          | Some _ -> acc
         in
-        Core.Std.List.filter_map ~f lights
+        List.fold_left f Color.black lights
       in
-      let color = List.fold_left (fun acc c -> Color.add c acc) Color.black colors in
-      Some (Color.fit color)
+      (* combine colors *)
+      Some (Color.fit color_from_lights)
 end
