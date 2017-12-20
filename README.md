@@ -10,7 +10,7 @@
 
 ### Other features
 - [ ] configurable screen (position, resolution)
-- [ ] simple shading - `Facing Ratio`
+- [x] simple shading - `Facing Ratio`
 - [ ] decrease in light intensity
 - [ ] new surface type: mirror
 - [ ] mixed surface type 
@@ -18,7 +18,7 @@
 - [ ] better structure - optimization 
 
 ### Improvements
-- [ ] extract calculatin color out of structure module
+- [x] extract calculatin color out of structure module
 - [ ] plane slice
 - [ ] configurable light color
 - [ ] rename ray.point to ray.source
