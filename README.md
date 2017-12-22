@@ -25,6 +25,7 @@
 
 ### Bugs
 - [x] sqrt vs ** 2.
+- [ ] Restrict ray distance
 
 ## Questions
 - [ ] adding colors above max 255 val (online rendering)

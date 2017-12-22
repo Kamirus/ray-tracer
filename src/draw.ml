@@ -1,11 +1,12 @@
 open Graphics
 
-let calc_color x y = 
-  match Raytracers.RayTracerWithPerspectiveScreen.calc_color Testdata.tracer x y with
-  | None -> Color.create 100 100 100 |> Color.values
-  | Some c -> Color.values c
+let draw ~resolution ~default_color ~raytracer =
+  let calc_color x y = 
+    match raytracer x y with
+    | None -> default_color |> Color.values
+    | Some c -> Color.values c
+  in
 
-let draw resolution =
   open_graph @@ " " ^ resolution;
   (* auto_synchronize false; *)
   clear_graph ();
@@ -28,6 +29,3 @@ let draw resolution =
     loop ()
   in
   loop ()
-
-let () =
-  draw "800x600"

@@ -4,4 +4,4 @@ S src/**
 B _build/lib/**
 B _build/src/**
 
-PKG core lwt core_bench oUnit yojson
+PKG core lwt core_bench yojson

@@ -2,9 +2,9 @@
 <**/lib/**>: include
 
 <**/src/toimage*>: package(camlimages)
-<**/src/cfg*>: package(yojson)
+<**/src/parse_cfg*>: package(yojson)
 <**/src/draw*>: package(graphics)
-<**/test.*>: package(oUnit)
+<**/src/run*>: package(graphics,yojson)
 
 true: package(core,ppx_jane,core_bench)
 true: thread,debug

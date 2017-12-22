@@ -24,4 +24,4 @@ let structure =
 
 (* let tracer = Raytracers.SimpleRayTracer.create screen structure *)
 let tracer = Raytracers.RayTracerWithPerspectiveScreen.create
-    screen structure
+    (screen, structure)

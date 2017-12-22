@@ -6,6 +6,17 @@ module type STRUCTURE = sig
   val calc_color : t -> Ray.t -> Color.t option
 end
 
+module type STRUCTURE_INSTANCE = sig
+  module S : STRUCTURE
+  val this : S.t
+end
+
+let create_instance (type a) (module S : STRUCTURE with type config = a) cfg = 
+  (module struct 
+    module S = S
+    let this = S.create cfg
+  end : STRUCTURE_INSTANCE)
+
 (* --- *)
 
 module Os = Objects
