@@ -1,4 +1,4 @@
-module type RAYTRACER = sig
+(* module type RAYTRACER = sig
   type t
   type config
 
@@ -35,13 +35,13 @@ let create_instance (type a) (module RT : RAYTRACER with type config = a) cfg =
   (module struct 
     module RT = RT
     let this = RT.create cfg
-  end : RAYTRACER_INSTANCE)
+  end : RAYTRACER_INSTANCE) *)
 
 (* --- *)
 
-module SimpleRayTracer = MakeRayTracer (Screens.NoPerspectiveFixedScreen) (Structures.ListStructure)
+(* module SimpleRayTracer = MakeRayTracer (Screens.NoPerspectiveFixedScreen) (Structures.ListStructure) *)
 
-module RayTracerWithPerspectiveScreen = MakeRayTracer (Screens.PerspectiveScreen) (Structures.ListStructure)
+(* module RayTracerWithPerspectiveScreen = MakeRayTracer (Screens.PerspectiveScreen) (Structures.ListStructure) *)
 
 let make_raytracer
     (module S : Screens.SCREEN_INSTANCE)

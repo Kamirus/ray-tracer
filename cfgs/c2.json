@@ -3,7 +3,8 @@
     "type": "PerpectiveScreen",
     "camera": {
       "center": [0, 0, -100],
-      "direction": [0, 0, 1],
+      "forward": [0, 0, 1],
+      "up": [0, 1, 0],
       "distanceFromScreen": 200
     },
     "resolution": [800, 600],

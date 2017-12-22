@@ -70,16 +70,8 @@ module MakePerspectiveScreen (C : Cameras.CAMERA) : SCREEN
 
   let pixel_ray ((camera, x_max, y_max, ratio) as t) x y = 
     if not @@ valid_xy (x_max, y_max) x y then None
-    else 
+    else
       let xy = vec2d_to_pixel t x y in
       let ray = C.shoot camera xy in
       Some ray
 end
-
-
-module PerspectiveScreen = MakePerspectiveScreen (Cameras.Camera)
-
-let camera = Cameras.Camera.create 
-    (Point.create_ints 400 300 (-1000), Vector.create_ints 0 0 1, 1000.)
-let screen = PerspectiveScreen.create
-    (camera, 800, 600, 1.)

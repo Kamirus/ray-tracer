@@ -23,3 +23,5 @@ val mul : float -> t -> t
 val div : float -> t -> t
 
 val dot : t -> t -> float
+
+val cross : t -> t -> t

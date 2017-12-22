@@ -37,9 +37,10 @@ let center json =
 
 let camera_instance json = 
   let c = center json in
-  let dir = json |> U.member "direction" |> to_three to_float |> vector in
+  let forward = json |> U.member "forward" |> to_three to_float |> vector in
+  let up = json |> U.member "up" |> to_three to_float |> vector in
   let d = json |> U.member "distanceFromScreen" |> to_float in
-  Cameras.create_instance (module Cameras.Camera) (c, dir, d) 
+  Cameras.create_instance (module Cameras.Camera) (c, forward, up, d) 
 
 let screen_instance json = 
   let perspective_screen json = 
