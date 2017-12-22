@@ -46,7 +46,7 @@ module Plane : OBJECT
       let pp_dot_n = Vector.dot pp n
       and pr_dot_n = Vector.dot pr n in
       let d = (pp_dot_n -. pr_dot_n) /. raydir_dot_n in
-      if not @@ Util.valid d then None
+      if not @@ Util.valid d || d > Ray.max_d ray then None
       else
         Some (Intersection.create ray d c @@ normal t pr)
 end
@@ -80,8 +80,9 @@ module Sphere : OBJECT
         Some (Intersection.create ray d color normal)
       in
       let d1 = (-. b -. sqrt delta) /. (2. *. a) in
-      if Util.valid d1 then return d1
+      if Util.valid d1 && d1 <= Ray.max_d ray then return d1
       else
         let d2 = (-. b +. sqrt delta) /. (2. *. a) in
-        if Util.valid d2 then return d2 else None
+        if Util.valid d2 && d1 <= Ray.max_d ray then return d2
+        else None
 end

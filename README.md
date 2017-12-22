@@ -25,8 +25,9 @@
 
 ### Bugs
 - [x] sqrt vs ** 2.
-- [ ] restrict ray distance `(bug1.json)`
+- [x] restrict ray distance `(bug1.json)`
 - [ ] implement sun parsing in cfg
+- [ ] bug2.json weird picture stretching
 
 ## Questions
 - [ ] adding colors above max 255 val (online rendering)

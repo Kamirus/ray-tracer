@@ -55,5 +55,7 @@ module LightPoint : LIGHT
     Color.mulf color @@ intensity /. k |> Color.fit
 
   let ray_to_light { source } point =
-    Ray.create point @@ Vector.sub source point
+    let dir = Vector.sub source point in
+    let max_d = Vector.length dir in
+    Ray.create ~max_d point dir
 end

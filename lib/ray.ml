@@ -1,11 +1,14 @@
-type t = Point.t * Vector.t
+type t = Point.t * Vector.t * float
 
-let create p v =
-  (p, Vector.normalize v)
+let create ?(max_d=Util.t_max) p v =
+  (p, Vector.normalize v, max_d)
 
-let source (p, _) = p
+let source (p, _, _) = p
 
-let direction (_, v) = v
+let direction (_, v, _) = v
 
-let calc_point (p, v) t =
+let max_d (_, _, max_d) =
+  max_d
+
+let calc_point (p, v, _) t =
   Vector.add p (Vector.mul t v)
