@@ -3,7 +3,7 @@
 ## TODO
 
 ### Key features
-- [ ] configuration file - IMPLEMENT SUN PARSING
+- [x] configuration file
 - [ ] raport
 - [ ] documentation - .mli's
 - [x] perspective camera
@@ -25,7 +25,8 @@
 
 ### Bugs
 - [x] sqrt vs ** 2.
-- [ ] Restrict ray distance
+- [ ] restrict ray distance `(bug1.json)`
+- [ ] implement sun parsing in cfg
 
 ## Questions
 - [ ] adding colors above max 255 val (online rendering)
