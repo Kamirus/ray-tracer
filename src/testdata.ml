@@ -10,9 +10,11 @@ let structure =
   (* let light = Lights.create_instance (module Lights.Sun)
       { Lights.dir = Vector.create 0. (-.1.) 0.; Lights.color = Color.white } in *)
   let light = Lights.create_instance (module Lights.LightPoint)
-      { Lights.source = Point.create_ints 30 40 44; Lights.intensity = 30000.; Lights.color = Color.create 255 0 0 } in
+      { Lights.source = Point.create_ints 30 40 44; 
+      Lights.intensity = 30000.; Lights.color = Color.create 255 0 0 } in
   let light2 = Lights.create_instance (module Lights.LightPoint)
-      { Lights.source = Point.create_ints 50 40 44; Lights.intensity = 30000.; Lights.color = Color.create 0 0 255 } in
+      { Lights.source = Point.create_ints 50 40 44;
+      Lights.intensity = 30000.; Lights.color = Color.create 0 0 255 } in
   let plane = Objects.create_instance (module Objects.Plane)
       (Point.create_ints 40 20 44, Vector.create 0. 1. (-.0.1), Color.white) in
   let sphere = Objects.create_instance (module Objects.Sphere)

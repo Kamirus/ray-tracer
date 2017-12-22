@@ -1,0 +1,34 @@
+{
+  "screen": {
+    "type": "PerpectiveScreen",
+    "camera": {
+      "center": [40, 30, -100],
+      "direction": [0, 0, 1],
+      "distanceFromScreen": 100
+    },
+    "resolution": [800, 600],
+    "unitsPerPixel": 0.1
+  },
+  "objects": [
+    {
+      "type": "Plane",
+      "point": [40, 20, 44],
+      "normal": [0, 1, -0.1],
+      "color": [255, 255, 255]
+    },
+    {
+      "type": "Sphere",
+      "center": [40, 30, 44],
+      "radius": 10,
+      "color": [255, 255, 255]
+    }
+  ],
+  "lights": [
+    {
+      "type": "LightPoint",
+      "center": [30, 40, 44],
+      "intensity": 30000,
+      "color": [255, 0, 0]
+    }
+  ]
+}

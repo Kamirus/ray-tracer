@@ -5,6 +5,18 @@ module type SCREEN = sig
   val pixel_ray : t -> int -> int -> Ray.t option
 end
 
+module type SCREEN_INSTANCE = sig
+  module S : SCREEN
+  val this : S.t
+end
+
+let create_instance (type a) (module S : SCREEN with type t = a) t = 
+  (module struct 
+    module S = S
+    let this = S.create t
+  end : SCREEN_INSTANCE)
+
+(* --- *)
 
 (** [valid_xy (x_max, y_max) x y] bottom left corner is (0,0) point *)
 let valid_xy (x_max, y_max) x y = 
@@ -37,8 +49,7 @@ end
 module MakePerspectiveScreen (C : Cameras.CAMERA) : SCREEN 
   with type t = C.t * int * int * float
 = struct
-  type camera = C.t
-  type t = camera * int * int * float
+  type t = C.t * int * int * float
 
   (** [create (camera, x_max, y_max, ratio)]
       x_max, y_max - output picture resolution

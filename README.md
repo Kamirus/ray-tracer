@@ -3,7 +3,7 @@
 ## TODO
 
 ### Key features
-- [ ] configuration file
+- [ ] configuration file - IMPLEMENT SUN PARSING
 - [ ] raport
 - [ ] documentation - .mli's
 - [x] perspective camera

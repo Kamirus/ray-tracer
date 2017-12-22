@@ -8,6 +8,18 @@ module type CAMERA = sig
   val shoot : t -> float * float -> Ray.t
 end
 
+module type CAMERA_INSTANCE = sig
+  module C : CAMERA
+  val this : C.t
+end
+
+let create_instance (type a) (module C : CAMERA with type t = a) t = 
+  (module struct 
+    module C = C
+    let this = C.create t
+  end : CAMERA_INSTANCE)
+
+(* --- *)
 
 type camera_t = Point.t * Vector.t * float
 
