@@ -26,13 +26,16 @@
 - [x] rename ray.point to ray.source
 - [ ] use records instead of type tuples
 - [ ] usefull err messages for cfg
-- [ ] interactive cfg
+- [ ] better interactive cfg
+- [ ] configurable max recursion
 
 ### Bugs
 - [x] sqrt vs ** 2.
 - [x] restrict ray distance `(bug1.json)`
 - [x] `bug2.json` weird picture stretching
 - [x] implement sun parsing in cfg
+- [ ] objs are not being lit by reflected light
 
 ## Questions
 - [x] Multiple light sources? -> add
+- [ ] Ray from camera can hit obj without reaching screen: bug or feature?
