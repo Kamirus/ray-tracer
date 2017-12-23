@@ -1,12 +1,10 @@
 open Graphics
 
-let draw ~resolution ~default_color ~raytracer =
-  open_graph @@ " " ^ resolution;
-  (* auto_synchronize false; *)
-  clear_graph ();
+let reload cfg = 
+  let raytracer, x, y = Parse_cfg.parse cfg in
+  raytracer
 
-  set_window_title "Ray Tracer @KamilListopad";
-
+let draw raytracer =
   for x = 0 to size_x () - 1 do
     for y = 0 to size_y () - 1 do
       let r, g, b = raytracer x y |> Color.values in
@@ -14,12 +12,23 @@ let draw ~resolution ~default_color ~raytracer =
       plot x y;
     done
   done;
-  synchronize ();
+  auto_synchronize false;
+  synchronize ()
+
+let main ~resolution ~raytracer ~cfg =
+  open_graph @@ " " ^ resolution;
+  (* auto_synchronize false; *)
+  clear_graph ();
+
+  set_window_title "Ray Tracer @KamilListopad";
+
+  draw raytracer;
 
   (* loop forever *)
   let rec loop () : unit = 
-    let _ = 
-      wait_next_event [Mouse_motion; Button_down; Button_up; Key_pressed] in
+    (* let _ = wait_next_event [Mouse_motion; Button_down; Button_up; Key_pressed] in *)
+    Unix.sleep 1;
+    cfg |> reload |> draw;
     loop ()
   in
   loop ()

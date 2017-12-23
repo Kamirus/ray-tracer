@@ -8,7 +8,7 @@
       "distanceFromScreen": 100
     },
     "resolution": [800, 600],
-    "defaultColor": [100, 100, 100],
+    "defaultColor": [0, 0, 0],
     "unitsPerPixel": 0.1
   },
   "structure": {
@@ -19,37 +19,51 @@
       "type": "Plane",
       "point": [0, 0, 0],
       "normal": [0, 1, 0],
-      "albedo": 0.18,
+      "albedo": 0.50,
       "color": [255, 255, 255]
     },
     {
       "type": "Plane",
       "point": [-100, 0, 0],
       "normal": [1, 0, -1],
-      "albedo": 0.18,
+      "albedo": 0.50,
       "color": [255, 255, 255]
     },
     {
       "type": "Plane",
       "point": [100, 0, 0],
       "normal": [-1, 0, -1],
-      "albedo": 0.18,
+      "albedo": 0.50,
       "color": [255, 255, 255]
     },
     {
       "type": "Sphere",
-      "center": [40, 30, 44],
+      "center": [-15, 20, 70],
       "radius": 10,
-      "albedo": 0.18,
-      "color": [255, 255, 255]
+      "albedo": 0,
+      "color": [0, 255, 0]
+    },
+    {
+      "type": "Sphere",
+      "center": [50, 30, 40],
+      "radius": 10,
+      "albedo": 0,
+      "color": [255, 0, 0]
+    },
+    {
+      "type": "Sphere",
+      "center": [0, 50, 44],
+      "radius": 10,
+      "albedo": 0,
+      "color": [0, 0, 255]
     }
   ],
   "lights": [
     {
       "type": "LightPoint",
-      "center": [0, 50, 0],
-      "intensity": 30000,
-      "color": [255, 0, 0]
+      "center": [0, 30, 0],
+      "intensity": 45000,
+      "color": [255, 255, 255]
     }
   ]
 }

@@ -4,9 +4,9 @@ let to_filepath filename =
 
 let render_on_screen filename =
   let path = to_filepath filename in
-  let raytracer, x, y, default_color = Parse_cfg.parse path in
+  let raytracer, x, y = Parse_cfg.parse path in
   let resolution = x ^ "x" ^ y in
-  Draw.draw ~default_color ~resolution ~raytracer
+  Draw.main ~resolution ~raytracer ~cfg:path
 
 (* let filepaths =
   List.tl @@ Array.to_list Sys.argv

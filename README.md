@@ -7,13 +7,14 @@
 - [ ] raport
 - [ ] documentation - .mli's
 - [x] perspective camera
+- [ ] dump to img file
 
 ### Other features
 - [x] decrease in light intensity
 - [x] configurable screen (position, resolution)
 - [x] simple shading - `Facing Ratio`
-- [ ] new surface type: mirror
-- [ ] mixed surface type 
+- [x] new surface type: mirror
+- [x] mixed surface type 
 - [ ] Gamma correction
 - [ ] better structure - optimization
 - [ ] shutter + physical sizes of light sources
@@ -25,6 +26,7 @@
 - [x] rename ray.point to ray.source
 - [ ] use records instead of type tuples
 - [ ] usefull err messages for cfg
+- [ ] interactive cfg
 
 ### Bugs
 - [x] sqrt vs ** 2.

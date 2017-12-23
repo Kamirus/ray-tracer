@@ -79,7 +79,7 @@ let object_instance json =
   let plane json = 
     let point = json |> point "point" in
     let normal = json |> vector "normal" in
-    let albedo = json |> get "albedo" U.to_float in
+    let albedo = json |> get "albedo" to_float in
     let color = json |> color in
     Objects.create_instance (module Objects.Plane) {Objects.point; normal; albedo; color}
   in
@@ -126,4 +126,4 @@ let parse json_path =
   let x, y = 
     json |> get "screen" @@ get "resolution" @@ to_pair U.to_int in
   let raytracer = Raytracers.make_raytracer default_color screen structure in
-  (raytracer, string_of_int x, string_of_int y, default_color)
+  (raytracer, string_of_int x, string_of_int y)
