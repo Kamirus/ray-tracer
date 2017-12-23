@@ -111,7 +111,7 @@ module ListStructure : STRUCTURE
         (* --- *)
         (* TODO: global illumination *)
         (* TODO: reflect (and/or refract) if object surface allows to *)
-        let reflected = if k > 15 then Color.black
+        let reflected = if k > 20 then Color.black
           else reflect intersection (aux (k + 1)) in
         (* calc colors from every light and add them *)
         let color_from_lights = 
