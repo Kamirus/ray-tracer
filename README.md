@@ -16,6 +16,7 @@
 - [ ] mixed surface type 
 - [ ] Gamma correction
 - [ ] better structure - optimization
+- [ ] shutter + physical sizes of light sources
 
 ### Improvements
 - [x] configurable light color
@@ -23,6 +24,7 @@
 - [ ] plane slice
 - [x] rename ray.point to ray.source
 - [ ] use records instead of type tuples
+- [ ] usefull err messages for cfg
 
 ### Bugs
 - [x] sqrt vs ** 2.

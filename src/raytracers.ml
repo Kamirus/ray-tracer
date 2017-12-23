@@ -43,7 +43,7 @@ let create_instance (type a) (module RT : RAYTRACER with type config = a) cfg =
 
 (* module RayTracerWithPerspectiveScreen = MakeRayTracer (Screens.PerspectiveScreen) (Structures.ListStructure) *)
 
-let make_raytracer
+let make_raytracer default_color
     (module S : Screens.SCREEN_INSTANCE)
     (module Struct : Structures.STRUCTURE_INSTANCE) = 
   fun x y ->
@@ -51,4 +51,4 @@ let make_raytracer
     | None -> 
       failwith "Screen rejected this ray"
     | Some ray -> 
-      Struct.S.calc_color Struct.this ray
+      Struct.S.calc_color Struct.this default_color ray

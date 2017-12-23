@@ -2,9 +2,9 @@
   "screen": {
     "type": "PerpectiveScreen",
     "camera": {
-      "center": [0, 100, -100],
-      "forward": [0, -1, 1],
-      "up": [0, 1, 1],
+      "center": [0, 30, -150],
+      "forward": [0, 0, 1],
+      "up": [0, 1, 0],
       "distanceFromScreen": 100
     },
     "resolution": [800, 600],
@@ -20,35 +20,36 @@
       "point": [0, 0, 0],
       "normal": [0, 1, 0],
       "albedo": 0.18,
-      "color": [152, 25, 55]
+      "color": [255, 255, 255]
     },
     {
-      "type": "Sphere",
-      "center": [15, 15, 10],
-      "radius": 15,
+      "type": "Plane",
+      "point": [-100, 0, 0],
+      "normal": [1, 0, -1],
       "albedo": 0.18,
-      "color": [255, 255, 0]
+      "color": [255, 255, 255]
     },
     {
-      "type": "Sphere",
-      "center": [-20, 7, 7],
-      "radius": 7,
+      "type": "Plane",
+      "point": [100, 0, 0],
+      "normal": [-1, 0, -1],
       "albedo": 0.18,
-      "color": [255, 0, 255]
+      "color": [255, 255, 255]
     },
     {
       "type": "Sphere",
-      "center": [-5, 10, -10],
+      "center": [40, 30, 44],
       "radius": 10,
       "albedo": 0.18,
-      "color": [0, 255, 255]
+      "color": [255, 255, 255]
     }
   ],
   "lights": [
     {
-      "type": "Sun",
-      "direction": [-1, -1, 0],
-      "color": [255, 255, 255]
+      "type": "LightPoint",
+      "center": [0, 50, 0],
+      "intensity": 30000,
+      "color": [255, 0, 0]
     }
   ]
 }

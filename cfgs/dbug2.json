@@ -8,7 +8,7 @@
       "distanceFromScreen": 200
     },
     "resolution": [800, 600],
-    "defaultColor": [100, 100, 100],
+    "defaultColor": [0, 0, 0],
     "unitsPerPixel": 0.1
   },
   "structure": {
@@ -19,12 +19,14 @@
       "type": "Plane",
       "point": [0, 60, 0],
       "normal": [0, -1, 0],
+      "albedo": 0.18,
       "color": [255, 255, 255]
     },
     {
       "type": "Sphere",
       "center": [0, 50, 0],
       "radius": 10,
+      "albedo": 0.18,
       "color": [255, 255, 255]
     }
   ],

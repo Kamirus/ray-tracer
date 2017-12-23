@@ -3,7 +3,6 @@ module type OBJECT = sig
 
   val create : t -> t
   val get_color : t -> Color.t
-  (* val normal : t -> Point.t -> Vector.t *)
   val intersect : t -> Ray.t -> Intersection.t option
 end
 
@@ -20,35 +19,48 @@ let create_instance (type a) (module O : OBJECT with type t = a) t =
 
 (* --- *)
 
-type plane_t = Point.t * Vector.t * Color.t
-type sphere_t = Point.t * float * Color.t
+type plane_t = { point : Point.t
+               ; normal : Vector.t
+               ; albedo : float
+               ; color : Color.t }
+
+type sphere_t = { center : Point.t
+                ; radius : float
+                ; albedo : float
+                ; color : Color.t }
 
 module Plane : OBJECT
   with type t = plane_t
 = struct
   type t = plane_t
 
-  let create (point, vector, color) = 
-    (point, Vector.normalize vector, color)
-  let get_color (_, _, c) = 
-    c
-  let normal (pp, v, _) p =
-    let pp_to_p = Vector.sub p pp in
-    if Vector.dot v pp_to_p < 0.
-    then Vector.mul (-1.) v
-    else v
-  let intersect ((pp, n, c) as t) ray = 
+  let create {point; normal; albedo; color} = 
+    let normal = Vector.normalize normal in
+    if albedo < 0. || albedo > 1. 
+    then failwith @@ "Albedo: invalid value ()" ^ (string_of_float albedo);
+    {point; normal; albedo; color}
+
+  let get_color ({color} : plane_t) = 
+    color
+
+  let get_normal {point; normal} p =
+    let point_to_p = Vector.sub p point in
+    if Vector.dot normal point_to_p < 0.
+    then Vector.mul (-1.) normal
+    else normal
+
+  let intersect ({point; normal; color; albedo} as t) ray = 
     let pr = Ray.source ray in
-    let raydir_dot_n = Vector.dot n (Ray.direction ray) in
-    if abs_float raydir_dot_n < Util.epsilon 
+    let raydir_dot_normal = Vector.dot normal (Ray.direction ray) in
+    if abs_float raydir_dot_normal < Util.epsilon 
     then None (* 90deg, we want just one point *)
-    else 
-      let pp_dot_n = Vector.dot pp n
-      and pr_dot_n = Vector.dot pr n in
-      let d = (pp_dot_n -. pr_dot_n) /. raydir_dot_n in
+    else
+      let point_dot_normal = Vector.dot point normal
+      and pr_dot_normal = Vector.dot pr normal in
+      let d = (point_dot_normal -. pr_dot_normal) /. raydir_dot_normal in
       if not @@ Util.valid d || d > Ray.max_d ray then None
       else
-        Some (Intersection.create ray d c @@ normal t pr)
+        Some (Intersection.create ~ray ~d ~color ~normal:(get_normal t pr) ~albedo)
 end
 
 module Sphere : OBJECT 
@@ -56,19 +68,19 @@ module Sphere : OBJECT
 = struct
   type t = sphere_t
 
-  let create (center, radius, color) = 
-    (center, radius, color)
-  let get_color (_, _, c) = 
-    c
-  let normal (c, r, _) p = 
-    Vector.sub p c |> Vector.normalize
-  let intersect ((center, r, color) as t) ray =
+  let create t = 
+    t
+  let get_color {color} = 
+    color
+  let get_normal {center} p = 
+    Vector.sub p center |> Vector.normalize
+  let intersect ({center; radius; color; albedo} as t) ray =
     let raydir = Ray.direction ray
     and p = Vector.sub (Ray.source ray) center in
 
     let a = Vector.length2 raydir
     and b = 2. *. Vector.dot raydir p
-    and c = Vector.length2 p -. r *. r in
+    and c = Vector.length2 p -. radius ** 2. in
 
     let delta = b ** 2. -. 4. *. a *. c in
 
@@ -76,8 +88,8 @@ module Sphere : OBJECT
     else
       let return d =
         let hit_point = Ray.calc_point ray d in
-        let normal = normal t hit_point in
-        Some (Intersection.create ray d color normal)
+        let normal = get_normal t hit_point in
+        Some (Intersection.create ~ray ~d ~color ~normal ~albedo)
       in
       let d1 = (-. b -. sqrt delta) /. (2. *. a) in
       if Util.valid d1 && d1 <= Ray.max_d ray then return d1

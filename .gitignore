@@ -5,6 +5,6 @@ tmp.*
 
 _build/
 
-README.pdf
+*.pdf
 
 .ocamlinit_tmp

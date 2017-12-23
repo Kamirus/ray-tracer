@@ -3,6 +3,7 @@
 type t = { ray : Ray.t
          ; d : float
          ; color : Color.t
+         ; albedo : float
          ; normal : Vector.t
          ; biased_point : Point.t }
 
@@ -11,8 +12,8 @@ type t = { ray : Ray.t
     d - distance from ray.source to hit point
     color - object full color at the hit point
     normal - normal vector *)
-let create ray d color normal = 
+let create ~ray ~d ~color ~normal ~albedo = 
   let normal = Vector.normalize normal in
   let hit_point = Ray.calc_point ray d in
   let biased_point = Vector.add hit_point (Vector.mul Util.epsilon normal) in
-  { ray; d; color; normal; biased_point }
+  { ray; d; color; normal; biased_point; albedo }

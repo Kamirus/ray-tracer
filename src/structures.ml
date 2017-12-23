@@ -3,7 +3,7 @@ module type STRUCTURE = sig
   type t
 
   val create : config -> t
-  val calc_color : t -> Ray.t -> Color.t option
+  val calc_color : t -> Color.t -> Ray.t -> Color.t
 end
 
 module type STRUCTURE_INSTANCE = sig
@@ -22,13 +22,14 @@ let create_instance (type a) (module S : STRUCTURE with type config = a) cfg =
 module Os = Objects
 module Ls = Lights
 module I = Intersection
+module V = Vector
 
 (** [facing_ratio color normal dir] apply simple shader
     color - 100% color without shading
     normal - object's normal vector
     dir - direction of the ray (from point to light) *)
 let facing_ratio color normal dir =
-  let ratio = Vector.dot normal dir in
+  let ratio = V.dot normal dir in
   Color.mulf color ratio
 
 let ray_from_point_to_light point (module L : Ls.LIGHT_INSTANCE) = 
@@ -43,6 +44,15 @@ let color_by_single_light { I.biased_point; I.color; I.normal }
   (* shading *)
   let dir = L.Light.ray_to_light L.this biased_point |> Ray.direction in
   facing_ratio full_color normal dir
+
+let reflect {I.biased_point; I.normal; I.albedo; I.ray} calc_color = 
+  if albedo <= 0. then Color.black
+  else
+    let rd = Ray.direction ray in
+    let dir = V.sub rd @@ V.mul (2. *. V.dot normal rd) normal in
+    let ray = Ray.create biased_point dir in
+    let color = calc_color ray in
+    Color.mulf color albedo
 
 (* --- *)
 
@@ -79,26 +89,36 @@ module ListStructure : STRUCTURE
     in
     aux objects None
 
-  let calc_color {lights; objects} ray =
-    (* check if ray hit sth *)
-    match closest objects ray with
-    | None -> None (* nope *)
-    | Some ({ I.d; I.biased_point } as intersection) -> 
-      (* --- *)
-      (* TODO: global illumination *)
-      (* TODO: reflect (and/or refract) if object surface allows to *)
-      (* calc colors from every light and add them *)
-      let color_from_lights = 
-        let f acc light = 
-          let ray = ray_from_point_to_light biased_point light in
-          match closest objects ray with
-          | None ->
-            let c = color_by_single_light intersection light in
-            Color.add acc c
-          | Some _ -> acc
-        in
-        List.fold_left f Color.black lights
+  let color_from_lights {objects; lights} ({I.biased_point; I.albedo} as intersection) =
+    if albedo >= 1. then Color.black
+    else
+      let f acc light = 
+        let ray = ray_from_point_to_light biased_point light in
+        match closest objects ray with
+        | None ->
+          let c = color_by_single_light intersection light in
+          Color.add acc c
+        | Some _ -> acc
       in
-      (* combine colors *)
-      Some (Color.fit color_from_lights)
+      List.fold_left f Color.black lights
+
+  let calc_color ({objects} as t) default_color ray =
+    let rec aux k ray =
+      (* check if ray hit sth *)
+      match closest objects ray with
+      | None -> default_color (* nope *)
+      | Some ({I.albedo} as intersection) -> 
+        (* --- *)
+        (* TODO: global illumination *)
+        (* TODO: reflect (and/or refract) if object surface allows to *)
+        let reflected = if k > 15 then Color.black
+          else reflect intersection (aux (k + 1)) in
+        (* calc colors from every light and add them *)
+        let color_from_lights = 
+          let c = Color.fit @@ color_from_lights t intersection in
+          Color.mulf c @@ 1. -. albedo in
+        (* combine colors *)
+        Color.add color_from_lights reflected
+    in
+    aux 0 ray
 end

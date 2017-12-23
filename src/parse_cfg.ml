@@ -77,16 +77,18 @@ let structure_instance ~objects ~lights json =
 
 let object_instance json = 
   let plane json = 
-    let p = json |> point "point" in
+    let point = json |> point "point" in
     let normal = json |> vector "normal" in
+    let albedo = json |> get "albedo" U.to_float in
     let color = json |> color in
-    Objects.create_instance (module Objects.Plane) (p, normal, color)
+    Objects.create_instance (module Objects.Plane) {Objects.point; normal; albedo; color}
   in
   let sphere json = 
-    let c = json |> point "center" in
-    let r = json |> get "radius" to_float in
+    let center = json |> point "center" in
+    let radius = json |> get "radius" to_float in
+    let albedo = json |> get "albedo" to_float in
     let color = json |> color in
-    Objects.create_instance (module Objects.Sphere) (c, r, color)
+    Objects.create_instance (module Objects.Sphere) {Objects.center; radius; albedo; color}
   in
   match typ json with
   | "Plane" -> plane json
@@ -113,18 +115,15 @@ let light_instance json =
 
 (* PUBLIC *)
 
-let raytracer json_path = 
+let parse json_path = 
   let json = Yojson.Basic.from_file json_path in
   let screen = json |> get "screen" screen_instance in
   let objects = json |> get_list "objects" object_instance in
   let lights = json |> get_list "lights" light_instance in
   let structure = json |> get "structure" @@ structure_instance ~objects ~lights in
-  Raytracers.make_raytracer screen structure
-
-let settings json_path = 
-  let json = Yojson.Basic.from_file json_path in
   let default_color = 
     json |> get "screen" @@ color ~name:"defaultColor" in
   let x, y = 
     json |> get "screen" @@ get "resolution" @@ to_pair U.to_int in
-  (string_of_int x, string_of_int y, default_color)
+  let raytracer = Raytracers.make_raytracer default_color screen structure in
+  (raytracer, string_of_int x, string_of_int y, default_color)
