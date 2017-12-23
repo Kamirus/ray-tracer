@@ -37,7 +37,7 @@ module Camera : CAMERA
     let forward = Vector.normalize forward in
     let up = Vector.normalize up in
     assert (Vector.dot up forward < Util.epsilon);
-    let right = Vector.cross forward up in
+    let right = Vector.cross up forward in
     let distance = abs_float distance_from_screen in
     let screen_center = Vector.add center (Vector.mul distance forward) in
     {center; screen_center; forward; up; right}
