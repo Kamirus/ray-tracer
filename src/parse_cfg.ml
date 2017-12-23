@@ -22,10 +22,12 @@ let to_float json =
   end with
   | U.Type_error (msg, _) -> failwith @@ "to_float err: " ^ msg
 
-let point (x, y, z) =
+let point json =
+  let x, y, z = json |> to_three to_float in
   Point.create x y z
 
-let vector (x, y, z) =
+let vector json =
+  let x, y, z = json |> to_three to_float in
   Vector.create x y z
 
 let color ?(name="color") json =
@@ -33,12 +35,12 @@ let color ?(name="color") json =
   Color.create r g b
 
 let center json = 
-  json |> U.member "center" |> to_three to_float |> point
+  json |> U.member "center" |> point
 
 let camera_instance json = 
   let c = center json in
-  let forward = json |> U.member "forward" |> to_three to_float |> vector in
-  let up = json |> U.member "up" |> to_three to_float |> vector in
+  let forward = json |> U.member "forward" |> vector in
+  let up = json |> U.member "up" |> vector in
   let d = json |> U.member "distanceFromScreen" |> to_float in
   Cameras.create_instance (module Cameras.Camera) (c, forward, up, d) 
 
@@ -64,8 +66,8 @@ let structure_instance ~objects ~lights json =
 
 let object_instance json = 
   let plane json = 
-    let p = json |> U.member "point" |> to_three to_float |> point in
-    let normal = json |> U.member "normal" |> to_three to_float |> vector in
+    let p = json |> U.member "point" |> point in
+    let normal = json |> U.member "normal" |> vector in
     let color = color json in
     Objects.create_instance (module Objects.Plane) (p, normal, color)
   in
@@ -81,7 +83,11 @@ let object_instance json =
   | other -> failwith @@ "object type: " ^ other ^ " not supported"
 
 let light_instance json = 
-  let sun json = failwith "not implemented" in
+  let sun json = 
+    let dir = json |> U.member "direction" |> vector in
+    let color = color json in
+    Lights.create_instance (module Lights.Sun) {Lights.dir; color} 
+  in
   let light_point json = 
     let source = center json in
     let color = color json in
