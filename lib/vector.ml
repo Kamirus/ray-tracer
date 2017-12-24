@@ -6,6 +6,9 @@ let create x y z =
 let create_ints x y z = 
   (float_of_int x, float_of_int y, float_of_int z)
 
+let values t =
+  t
+
 let add (x1, y1, z1) (x2, y2, z2) = 
   (x1 +. x2, y1 +. y2, z1 +. z2)
 

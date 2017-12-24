@@ -30,7 +30,7 @@ module V = Vector
     dir - direction of the ray (from point to light) *)
 let facing_ratio color normal dir =
   let ratio = V.dot normal dir in
-  Color.mulf color ratio
+  Color.mulf ratio color
 
 let ray_from_point_to_light point (module L : Ls.LIGHT_INSTANCE) = 
   L.Light.ray_to_light L.this point
@@ -45,14 +45,61 @@ let color_by_single_light { I.biased_point; I.color; I.normal }
   let dir = L.Light.ray_to_light L.this biased_point |> Ray.direction in
   facing_ratio full_color normal dir
 
-let reflect {I.biased_point; I.normal; I.albedo; I.ray} calc_color = 
-  if albedo <= 0. then Color.black
+let reflect {I.biased_point; I.normal; I.albedo; I.ray} calc_color k = 
+  if albedo <= 0. || k > Util.max_rec then Color.black
   else
     let rd = Ray.direction ray in
     let dir = V.sub rd @@ V.mul (2. *. V.dot normal rd) normal in
     let ray = Ray.create biased_point dir in
-    let color = calc_color ray in
-    Color.mulf color albedo
+    let color = calc_color (k + 1) ray in
+    Color.mulf albedo color
+
+(** calculate random direction *)
+let rand_dir normal =
+  let coordinate_system n =
+    let (x, y, z) = Vector.values n in
+    let nt = if abs_float x > abs_float y
+      then Vector.create z 0. (-.x)
+           |> Vector.mul @@ sqrt (x *. x +. z *. z)
+      else Vector.create 0. (-.z) y 
+           |> Vector.mul @@ sqrt (y *. y +. z *. z) in
+    let nb = Vector.cross n nt in
+    nt, nb
+  in
+  let sample () =
+    (* assume normal is [0, 1, 0] *)
+    let z = Random.float 1. (* [0, 1] *)
+    and a = Random.float @@ 2. *. Util.pi in (* [0, 2pi] *)
+    let k = 1. -. z ** 2. |> sqrt in
+    let x = k *. cos a 
+    and y = k *. sin a in
+    Vector.create x y z
+  in
+  let nt, nb = coordinate_system normal
+  and sx, sy, sz = sample () |> Vector.values
+  and nx, ny, nz = Vector.values normal in
+  let ntx, nty, ntz = Vector.values nt in
+  let nbx, nby, nbz = Vector.values nt in
+  (* translate *)
+  Vector.create
+    (sx *. nbx +. sy *. nx +. sz *. ntx)
+    (sx *. nby +. sy *. ny +. sz *. nty)
+    (sx *. nbz +. sy *. nz +. sz *. ntz)
+
+(** compute indirect illumination *)
+let indirect {I.biased_point; I.normal; I.albedo; I.ray} calc_color k = 
+  if albedo >= 1. || k > Util.max_rec then Color.black
+  else
+    let no_rr = 128 in (* number of random rays *)
+    let rec aux j acc = 
+      if j > no_rr then acc
+      else
+        let dir = rand_dir normal in
+        let ray = Ray.create biased_point dir in
+        aux (j + 1) @@ Color.add acc @@ calc_color (k + 1) ray
+    in
+    aux 0 Color.black
+    |> Color.mulf @@ 1. /. float_of_int no_rr
 
 (* --- *)
 
@@ -89,7 +136,8 @@ module ListStructure : STRUCTURE
     in
     aux objects None
 
-  let color_from_lights {objects; lights} ({I.biased_point; I.albedo} as intersection) =
+  (** compute direct illumination *)
+  let direct {objects; lights} ({I.biased_point; I.albedo} as intersection) =
     if albedo >= 1. then Color.black
     else
       let f acc light = 
@@ -103,22 +151,23 @@ module ListStructure : STRUCTURE
       List.fold_left f Color.black lights
 
   let calc_color ({objects} as t) default_color ray =
-    let rec aux k ray =
+    let rec aux b k ray =
       (* check if ray hit sth *)
       match closest objects ray with
       | None -> default_color (* nope *)
       | Some ({I.albedo} as intersection) -> 
         (* --- *)
-        (* TODO: global illumination *)
-        (* TODO: reflect (and/or refract) if object surface allows to *)
-        let reflected = if k > 20 then Color.black
-          else reflect intersection (aux (k + 1)) in
-        (* calc colors from every light and add them *)
-        let color_from_lights = 
-          let c = Color.fit @@ color_from_lights t intersection in
-          Color.mulf c @@ 1. -. albedo in
+        let reflected = reflect intersection (aux b) k in
+        let direct_c = direct t intersection in
+        let indirect_c = 
+          if b then indirect intersection (aux false) k
+          else Color.black in
         (* combine colors *)
-        Color.add color_from_lights reflected
+        let mixed = Color.add direct_c indirect_c
+                    |> Color.mulf (1. -. albedo) in
+        (* |> Color.mulf albedo
+           |> Color.mulf @@ 1. /. Util.pi in *)
+        Color.add mixed reflected
     in
-    Color.fit @@ aux 0 ray
+    Color.fit @@ aux true 0 ray
 end

@@ -10,5 +10,5 @@ val create : int -> int -> int -> t
 val values : t -> int * int * int
 val add : t -> t -> t
 val mul : t -> t -> t
-val mulf : t -> float -> t
+val mulf : float -> t -> t
 val fit : t -> t

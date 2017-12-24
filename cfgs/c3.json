@@ -62,7 +62,7 @@
     {
       "type": "LightPoint",
       "center": [0, 30, 0],
-      "intensity": 45000,
+      "intensity": 45000000,
       "color": [255, 255, 255]
     }
   ]

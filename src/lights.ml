@@ -52,7 +52,7 @@ module LightPoint : LIGHT
   let get_color { source; color; intensity } p = 
     let d2 = Vector.sub p source |> Vector.length2 in
     let k = 4. *. Util.pi *. d2 in
-    Color.mulf color @@ intensity /. k |> Color.fit
+    Color.fit @@ Color.mulf (intensity /. k) color
 
   let ray_to_light { source } point =
     let dir = Vector.sub source point in

@@ -5,6 +5,8 @@ val create : float -> float -> float -> t
 val create_ints : int -> int -> int -> t
 (** [create_ints x y z] create using integer values *)
 
+val values : t -> float * float * float
+
 val length : t -> float
 
 val length2 : t -> float
