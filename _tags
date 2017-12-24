@@ -1,7 +1,7 @@
 <**/src/**>: include
 <**/lib/**>: include
 
-<**/src/toimage*>: package(camlimages)
+<**/src/toimage*>: package(imagelib)
 <**/src/parse_cfg*>: package(yojson)
 <**/src/draw*>: package(graphics)
 <**/src/run*>: package(graphics,yojson)

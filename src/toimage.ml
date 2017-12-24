@@ -1,13 +1,13 @@
+(* ocamlopt -I /home/kamirus/.opam/system/lib/camlimages/ camlimages_core.cmxa graphics.cmxa camlimages_graphics.cmxa camlimages_png.cmxa toimage.ml -o toimage *)
+
 let () =
   let width  = 800
   and length = 600
-  and name   = "cool-pic"
-  and black = {Color.r = 0; g=0; b=0; }
-  and white = {Color.r = 255; g=255; b=255; } in
-  let image = Rgb24.make width length black in
-  for i = 0 to width-1 do
-    for j = 0 to (length/2) - 1 do
-      Rgb24.set image i j white;
+  and name   = "cool-pic.png" in
+  let image = Image.create_rgb 800 600 in
+  for x = 0 to 49 do
+    for y = 0 to 100 do
+      Image.write_rgb image x y 255 0 0;
     done;
   done;
-  Png.save name [] (Images.Rgb24 image)
+  ImageLib.PNG.write_png name image

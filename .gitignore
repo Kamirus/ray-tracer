@@ -6,5 +6,7 @@ tmp.*
 _build/
 
 *.pdf
+*.png
+*.jpg
 
 .ocamlinit_tmp
