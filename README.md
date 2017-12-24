@@ -39,6 +39,7 @@
 - [x] `bug2.json` weird picture stretching
 - [x] implement sun parsing in cfg
 - [ ] objs are not being lit by reflected light
+- [ ] keep proportions independently from resolution
 
 # Questions
 - [x] Multiple light sources? -> add
