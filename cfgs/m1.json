@@ -7,9 +7,9 @@
       "up": [0, 1, 0.7],
       "distanceFromScreen": 40
     },
-    "resolution": [800, 600],
+    "resolution": [1280, 720],
     "defaultColor": [0, 0, 0],
-    "unitsPerPixel": 0.1
+    "unitsPerPixel": 0.06
   },
   "structure": {
     "type": "ListStructure"

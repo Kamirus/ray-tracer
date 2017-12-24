@@ -4,7 +4,7 @@
 <**/src/toimage*>: package(imagelib)
 <**/src/parse_cfg*>: package(yojson)
 <**/src/draw*>: package(graphics)
-<**/src/run*>: package(graphics,yojson)
+<**/src/run*>: package(graphics,yojson,imagelib)
 
 true: package(core,ppx_jane,core_bench)
 true: thread,debug
