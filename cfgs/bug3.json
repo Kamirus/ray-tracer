@@ -1,0 +1,55 @@
+{
+  "screen": {
+    "type": "PerpectiveScreen",
+    "camera": {
+      "center": [55, 0, 60],
+      "forward": [-1, 0, 0.4],
+      "up": [0, 1, 0],
+      "distanceFromScreen": 100
+    },
+    "resolution": [800, 600],
+    "defaultColor": [100, 100, 100],
+    "unitsPerPixel": 0.1
+  },
+  "structure": {
+    "type": "ListStructure"
+  },
+  "objects": [
+    {
+      "type": "Plane",
+      "point": [0, 0, 100],
+      "normal": [0, 0, -1],
+      "albedo": 1,
+      "color": [255, 255, 255]
+    },
+    {
+      "type": "Sphere",
+      "center": [0, 0, 50],
+      "radius": 20,
+      "albedo": 0,
+      "color": [255, 255, 255]
+    },
+    {
+      "type": "Sphere",
+      "center": [-70, 0, 50],
+      "radius": 10,
+      "albedo": 0,
+      "color": [255, 255, 255]
+    },
+    {
+      "type": "Sphere",
+      "center": [70, 0, 50],
+      "radius": 10,
+      "albedo": 0,
+      "color": [255, 255, 255]
+    }
+  ],
+  "lights": [
+    {
+      "type": "LightPoint",
+      "center": [55, 0, 60],
+      "intensity": 40000,
+      "color": [255, 0, 0]
+    }
+  ]
+}

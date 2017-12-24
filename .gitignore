@@ -4,9 +4,8 @@
 tmp.*
 
 _build/
+pics/
 
 *.pdf
-*.png
-*.jpg
 
 .ocamlinit_tmp

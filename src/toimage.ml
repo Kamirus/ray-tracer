@@ -1,5 +1,3 @@
-(* ocamlopt -I /home/kamirus/.opam/system/lib/camlimages/ camlimages_core.cmxa graphics.cmxa camlimages_graphics.cmxa camlimages_png.cmxa toimage.ml -o toimage *)
-
 let () =
   let width  = 800
   and length = 600

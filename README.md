@@ -19,6 +19,8 @@
 - [ ] merge objects and lights
 - [ ] better structure - optimization
 - [ ] shutter + physical sizes of light sources
+- [ ] supersampling
+- [ ] creating needed directories for cfgs and pics
 
 ## Improvements
 - [x] configurable light color
@@ -29,6 +31,7 @@
 - [ ] usefull err messages for cfg
 - [ ] better interactive cfg
 - [ ] configurable max recursion
+- [ ] eliminate not tail recursive calls
 
 ## Bugs
 - [x] sqrt vs ** 2.
@@ -41,3 +44,4 @@
 - [x] Multiple light sources? -> add
 - [ ] Ray from camera can hit obj without reaching screen: bug or feature?
 - [ ] How to do glowing objects? How to shoot ray(s) from point to this object?
+- [ ] How to implement indirect illumination via mirrors (not only planes)

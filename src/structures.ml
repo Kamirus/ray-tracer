@@ -120,5 +120,5 @@ module ListStructure : STRUCTURE
         (* combine colors *)
         Color.add color_from_lights reflected
     in
-    aux 0 ray
+    Color.fit @@ aux 0 ray
 end
