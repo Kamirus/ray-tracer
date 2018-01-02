@@ -6,6 +6,5 @@
 <**/src/draw*>: package(graphics)
 <**/src/run*>: package(graphics,yojson,imagelib)
 
-true: package(core,ppx_jane,core_bench)
 true: thread,debug
 true: bin_annot
