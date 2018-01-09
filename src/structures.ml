@@ -90,7 +90,7 @@ let rand_dir normal =
 let indirect {I.biased_point; I.normal; I.albedo; I.ray} calc_color k = 
   if albedo >= 1. || k > Util.max_rec then Color.black
   else
-    let no_rr = 128 in (* number of random rays *)
+    let no_rr = 32 in (* number of random rays *)
     let rec aux j acc = 
       if j > no_rr then acc
       else
@@ -163,11 +163,9 @@ module ListStructure : STRUCTURE
           if b then indirect intersection (aux false) k
           else Color.black in
         (* combine colors *)
-        let mixed = Color.add direct_c indirect_c
-                    |> Color.mulf (1. -. albedo) in
-        (* |> Color.mulf albedo
-           |> Color.mulf @@ 1. /. Util.pi in *)
-        Color.add mixed reflected
+        Color.add direct_c indirect_c
+        |> Color.mulf (1. -. albedo)
+        |> Color.add reflected
     in
-    Color.fit @@ aux true 0 ray
+    Color.fit @@ aux true 1 ray
 end

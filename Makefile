@@ -16,8 +16,8 @@ cfgs: draw.cmo parse_cfg.cmo
 
 clean: 
 	$(OCB) -clean
-	rm -f *.compressed
-	rm -f *.decompressed
+	rm -f *.native
+	rm -f *.byte
 
 test:
 	$(OCB) test.native
