@@ -48,6 +48,7 @@
 - [ ] usefull err messages for cfg
 - [x] configurable max recursion and indirect illumination
 - [ ] creating needed directories for cfgs and pics
+- [ ] color scaling (remove `Color.fit` in `structure`)
 
 ## Bugs
 - [x] sqrt vs ** 2.
