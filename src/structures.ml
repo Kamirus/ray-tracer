@@ -3,7 +3,7 @@ module type STRUCTURE = sig
   type t
 
   val create : config -> t
-  val calc_color : t -> Color.t -> Ray.t -> Color.t
+  val calc_color : t -> Ray.t -> Color.t
 end
 
 module type STRUCTURE_INSTANCE = sig
@@ -45,14 +45,12 @@ let color_by_single_light { I.biased_point; I.color; I.normal }
   let dir = L.Light.ray_to_light L.this biased_point |> Ray.direction in
   facing_ratio full_color normal dir
 
-let reflect {I.biased_point; I.normal; I.albedo; I.ray} calc_color k = 
-  if albedo <= 0. || k > Util.max_rec then Color.black
-  else
-    let rd = Ray.direction ray in
-    let dir = V.sub rd @@ V.mul (2. *. V.dot normal rd) normal in
-    let ray = Ray.create biased_point dir in
-    let color = calc_color (k + 1) ray in
-    Color.mulf albedo color
+let reflect {I.biased_point; I.normal; I.albedo; I.ray} calc_color = 
+  let rd = Ray.direction ray in
+  let dir = V.sub rd @@ V.mul (2. *. V.dot normal rd) normal in
+  let ray = Ray.create biased_point dir in
+  let color = calc_color ray in
+  Color.mulf albedo color
 
 (** calculate random direction *)
 let rand_dir normal =
@@ -60,26 +58,33 @@ let rand_dir normal =
     let (x, y, z) = Vector.values n in
     let nt = if abs_float x > abs_float y
       then Vector.create z 0. (-.x)
-           |> Vector.mul @@ sqrt (x *. x +. z *. z)
+           |> Vector.mul @@ 1. /. sqrt (x *. x +. z *. z)
       else Vector.create 0. (-.z) y 
-           |> Vector.mul @@ sqrt (y *. y +. z *. z) in
+           |> Vector.mul @@ 1. /. sqrt (y *. y +. z *. z) in
     let nb = Vector.cross n nt in
     nt, nb
   in
   let sample () =
+    let r1 = Random.float 1. in
+    let r2 = Random.float 1. in
+    let sin_theta = 1. -. r1 *. r1 |> sqrt in 
+    let phi = 2. *. Util.pi *. r2 in
+    let x = sin_theta *. cos phi in 
+    let z = sin_theta *. sin phi in
+    (x, r1, z)
     (* assume normal is [0, 1, 0] *)
-    let z = Random.float 1. (* [0, 1] *)
+    (* let z = Random.float 1. (* [0, 1] *)
     and a = Random.float @@ 2. *. Util.pi in (* [0, 2pi] *)
     let k = 1. -. z ** 2. |> sqrt in
     let x = k *. cos a 
     and y = k *. sin a in
-    Vector.create x y z
+    Vector.create x y z *)
   in
   let nt, nb = coordinate_system normal
-  and sx, sy, sz = sample () |> Vector.values
+  and sx, sy, sz = sample ()
   and nx, ny, nz = Vector.values normal in
   let ntx, nty, ntz = Vector.values nt in
-  let nbx, nby, nbz = Vector.values nt in
+  let nbx, nby, nbz = Vector.values nb in
   (* translate *)
   Vector.create
     (sx *. nbx +. sy *. nx +. sz *. ntx)
@@ -87,28 +92,29 @@ let rand_dir normal =
     (sx *. nbz +. sy *. nz +. sz *. ntz)
 
 (** compute indirect illumination *)
-let indirect {I.biased_point; I.normal; I.albedo; I.ray} calc_color k = 
-  if albedo >= 1. || k > Util.max_rec then Color.black
-  else
-    let no_rr = 32 in (* number of random rays *)
-    let rec aux j acc = 
-      if j > no_rr then acc
-      else
-        let dir = rand_dir normal in
-        let ray = Ray.create biased_point dir in
-        aux (j + 1) @@ Color.add acc @@ calc_color (k + 1) ray
-    in
-    aux 0 Color.black
-    |> Color.mulf @@ 1. /. float_of_int no_rr
+let indirect {I.biased_point; I.normal; I.albedo; I.ray} calc_color no_indirect_samples = 
+  let rec aux j acc = 
+    if j > no_indirect_samples then acc
+    else
+      let dir = rand_dir normal in
+      let ray = Ray.create biased_point dir in
+      aux (j + 1) @@ Color.add acc @@ calc_color ray
+  in
+  aux 0 Color.black
+  |> Color.mulf @@ 1. /. float_of_int no_indirect_samples
 
 (* --- *)
 
 type list_structure_t = 
   { lights  : (module Ls.LIGHT_INSTANCE ) list
-  ; objects : (module Os.OBJECT_INSTANCE) list }
+  ; objects : (module Os.OBJECT_INSTANCE) list
+  ; default_color : Color.t
+  ; max_rec : int
+  ; no_indirect_samples : int
+  ; is_indirect : bool }
 
 module ListStructure : STRUCTURE 
-  with type config = list_structure_t and type t = list_structure_t
+  with type config = list_structure_t
 = struct
   type t = list_structure_t
   type config = list_structure_t
@@ -150,22 +156,24 @@ module ListStructure : STRUCTURE
       in
       List.fold_left f Color.black lights
 
-  let calc_color ({objects} as t) default_color ray =
+  let calc_color ({objects; max_rec; no_indirect_samples; is_indirect; default_color} as t) ray =
     let rec aux b k ray =
       (* check if ray hit sth *)
       match closest objects ray with
       | None -> default_color (* nope *)
       | Some ({I.albedo} as intersection) -> 
         (* --- *)
-        let reflected = reflect intersection (aux b) k in
+        let reflected = 
+          if albedo <= 0. || k > max_rec then Color.black
+          else reflect intersection (aux b @@ k + 1) in
         let direct_c = direct t intersection in
         let indirect_c = 
-          if b then indirect intersection (aux false) k
-          else Color.black in
+          if not b || albedo >= 1. || k > max_rec then Color.black 
+          else indirect intersection (aux false @@ k + 1) no_indirect_samples in
         (* combine colors *)
         Color.add direct_c indirect_c
         |> Color.mulf (1. -. albedo)
         |> Color.add reflected
     in
-    Color.fit @@ aux true 1 ray
+    aux is_indirect 1 ray
 end

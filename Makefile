@@ -12,7 +12,7 @@ basics: vector.cmo point.cmo ray.cmo color.cmo util.cmo intersection.cmo
 
 complex: screens.cmo objects.cmo lights.cmo structures.cmo raytracers.cmo
 
-cfgs: draw.cmo parse_cfg.cmo
+cfgs: draw.cmo parse_cfg.cmo toimage.cmo
 
 clean: 
 	$(OCB) -clean

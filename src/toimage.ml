@@ -1,11 +1,12 @@
-let main ~x_max ~y_max ~name ~raytracer =
+let main ~name ~pixels =
   let name = "pics/" ^ name ^ ".png" in
-  let image = Image.create_rgb x_max y_max in
-  
-  for x = 0 to x_max - 1 do
-    for y = 0 to y_max - 1 do
-      let c = raytracer x (y_max - 1 - y) in
-      let r, g, b = Color.values c in
+  let xmax = Array.length pixels     in
+  let ymax = Array.length pixels.(0) in
+  let image = Image.create_rgb xmax ymax in
+
+  for x = 0 to xmax - 1 do
+    for y = 0 to ymax - 1 do
+      let r, g, b = pixels.(x).(ymax - 1 - y) |> Color.values in
       Image.write_rgb image x y r g b
     done
   done;

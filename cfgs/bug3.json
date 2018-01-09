@@ -1,4 +1,12 @@
 {
+  "settings": {
+    "defaultColor": [40, 40, 40],    
+    "maxRecursion": 10,
+    "indirectIllumination": {
+      "turned on": true,
+      "#samples": 32
+    }
+  },
   "screen": {
     "type": "PerpectiveScreen",
     "camera": {
@@ -8,7 +16,6 @@
       "distanceFromScreen": 100
     },
     "resolution": [800, 600],
-    "defaultColor": [40, 40, 40],
     "unitsPerPixel": 0.1
   },
   "structure": {

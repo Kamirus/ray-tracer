@@ -4,7 +4,8 @@
   "screen": ...,
   "structure": ...,
   "objects": [ ... ],
-  "lights": [ ... ]
+  "lights": [ ... ],
+  ["settings": ...]
 }
 ```
 
@@ -150,5 +151,22 @@ Example:
   "center": [0, 50, 0],
   "intensity": 30000,
   "color": [255, 0, 0]
+}
+```
+
+
+# Settings
+
+Example:
+```json
+{
+  "settings": {
+    "defaultColor": [40, 40, 40],    
+    "maxRecursion": 10,
+    "indirectIllumination": {
+      "turned on": true,
+      "#samples": 32
+    }
+  },
 }
 ```

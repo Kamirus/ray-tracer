@@ -46,6 +46,27 @@ let color ?(name="color") json =
   let r,g,b = json |> get name (to_three U.to_int) in
   Color.create r g b
 
+(* settings *)
+type settings = { default_color : Color.t
+                ; max_rec : int
+                ; no_indirect_samples : int
+                ; is_indirect : bool }
+
+let parse_settings json = 
+  let get name f default json =
+    try get name f json with
+    | _ -> default
+  in
+  let indirect json = 
+    let no_indirect_samples = json |> get "#samples" U.to_int 32 in
+    let is_indirect = json |> get "turned on" U.to_bool false in
+    (no_indirect_samples, is_indirect)
+  in
+  let default_color = json |> color ~name:"defaultColor" in
+  let max_rec = json |> get "maxRecursion" U.to_int 10 in
+  let no_indirect_samples, is_indirect = json |> get "indirectIllumination" indirect (32, false) in
+  { default_color; max_rec; no_indirect_samples; is_indirect }
+
 (* Parsing compound objects *)
 
 let camera_instance json = 
@@ -68,11 +89,12 @@ let screen_instance json =
   | "PerpectiveScreen" -> perspective_screen json
   | other -> failwith @@ "screen type: " ^ other ^ " not supported"
 
-let structure_instance ~objects ~lights json =
+let structure_instance ~objects ~lights 
+    {default_color; max_rec; no_indirect_samples; is_indirect} json =
   let open Structures in
   match typ json with
   | "ListStructure" -> 
-    create_instance (module ListStructure) {objects; lights}
+    create_instance (module ListStructure) {objects; lights; default_color; max_rec; no_indirect_samples; is_indirect}
   | other -> failwith @@ "structure type: " ^ other ^ " not supported"
 
 let object_instance json = 
@@ -120,10 +142,9 @@ let parse json_path =
   let screen = json |> get "screen" screen_instance in
   let objects = json |> get_list "objects" object_instance in
   let lights = json |> get_list "lights" light_instance in
-  let structure = json |> get "structure" @@ structure_instance ~objects ~lights in
-  let default_color = 
-    json |> get "screen" @@ color ~name:"defaultColor" in
-  let x, y = 
-    json |> get "screen" @@ get "resolution" @@ to_pair U.to_int in
-  let raytracer = Raytracers.make_raytracer default_color screen structure in
-  (raytracer, string_of_int x, string_of_int y)
+  let settings = json |> get "settings" parse_settings in
+  let structure = json |> get "structure" @@ structure_instance ~objects ~lights settings in
+    let x, y = 
+      json |> get "screen" @@ get "resolution" @@ to_pair U.to_int in
+    let raytracer = Raytracers.make_raytracer screen structure in
+    (raytracer, string_of_int x, string_of_int y)

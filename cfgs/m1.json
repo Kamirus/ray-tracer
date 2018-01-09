@@ -1,4 +1,7 @@
 {
+  "settings": {
+    "defaultColor": [0, 0, 0]
+  },
   "screen": {
     "type": "PerpectiveScreen",
     "camera": {
@@ -8,7 +11,6 @@
       "distanceFromScreen": 40
     },
     "resolution": [1280, 720],
-    "defaultColor": [0, 0, 0],
     "unitsPerPixel": 0.06
   },
   "structure": {
