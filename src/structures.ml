@@ -175,5 +175,5 @@ module ListStructure : STRUCTURE
         |> Color.mulf (1. -. albedo)
         |> Color.add reflected
     in
-    aux is_indirect 1 ray
+    Color.fit @@ aux is_indirect 1 ray
 end

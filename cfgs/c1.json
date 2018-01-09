@@ -1,6 +1,11 @@
 {
   "settings": {
-    "defaultColor": [100, 100, 100]
+    "defaultColor": [0, 0, 0],
+    "maxRecursion": 10,
+    "indirectIllumination": {
+      "turned on": true,
+      "#samples": 32
+    }
   },
   "screen": {
     "type": "PerpectiveScreen",
