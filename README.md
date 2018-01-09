@@ -34,19 +34,19 @@
 - [x] mixed surface type 
 - [ ] Gamma correction
 - [ ] merge objects and lights
-- [ ] better structure - optimization
 - [ ] shutter + physical sizes of light sources
-- [ ] supersampling
+- [ ] supersampling (+ configurable in cfg)
+- [x] indirect illumination (+ configurable in cfg)
+- [ ] soft shadows (+ configurable in cfg)
 
 ## Improvements
 - [x] configurable light color
 - [x] extract calculatin color out of structure module
 - [x] interactive cfg (reload after a few seconds)
-- [ ] plane slice
 - [x] rename ray.point to ray.source
 - [ ] use records instead of type tuples
 - [ ] usefull err messages for cfg
-- [ ] configurable max recursion
+- [x] configurable max recursion and indirect illumination
 - [ ] creating needed directories for cfgs and pics
 
 ## Bugs
@@ -54,8 +54,8 @@
 - [x] restrict ray distance `(bug1.json)`
 - [x] `bug2.json` weird picture stretching
 - [x] implement sun parsing in cfg
-- [ ] objs are not being lit by reflected light (indirect illumination)
-- [ ] keep proportions independently from resolution
+- [ ] objs are not being lit by reflected light (indirect illumination && hittable lights)
+- [x] keep proportions independently from resolution
 
 # Questions
 - [x] Multiple light sources? -> add colors

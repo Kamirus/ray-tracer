@@ -4,7 +4,7 @@
     "maxRecursion": 10,
     "indirectIllumination": {
       "turned on": true,
-      "#samples": 32
+      "#samples": 128
     }
   },
   "screen": {
