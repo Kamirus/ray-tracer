@@ -27,6 +27,10 @@ let mulf x (r, g, b) =
 let fit (r, g, b) = 
   let f c = max min_val (min max_val c) in
   (f r, f g, f b)
+
+let floor (r, g, b) = 
+  let f c = max min_val c in
+  (f r, f g, f b)
   
 let white = create 255 255 255
 let black = create 0 0 0

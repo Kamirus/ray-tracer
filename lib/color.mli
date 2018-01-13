@@ -12,3 +12,4 @@ val add : t -> t -> t
 val mul : t -> t -> t
 val mulf : float -> t -> t
 val fit : t -> t
+val floor : t -> t
