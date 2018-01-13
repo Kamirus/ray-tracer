@@ -1,7 +1,7 @@
 module type LIGHT = sig
-  type t
+  include Objects.OBJECT
 
-  val create : t -> t
+  (* val create : t -> t *)
   val get_color : t -> Point.t -> Color.t
   val ray_to_light : t -> Point.t -> Ray.t
 end
@@ -26,6 +26,12 @@ module Sun : LIGHT
 = struct
   type t = sun_t
 
+  let get_color { color } =
+    color
+
+  let intersect { dir; color } ray =
+    None
+
   let create { dir; color } = 
     let dir = Vector.normalize dir in
     { dir; color }
@@ -46,6 +52,8 @@ module LightPoint : LIGHT
 = struct
   type t = light_point_t
 
+
+  
   let create { source; color; intensity } = 
     { source; color; intensity }
 

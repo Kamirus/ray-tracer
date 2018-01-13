@@ -36,8 +36,8 @@
 - [ ] merge objects and lights
 - [ ] shutter + physical sizes of light sources
 - [ ] supersampling (+ configurable in cfg)
-- [x] indirect illumination (+ configurable in cfg)
 - [ ] soft shadows (+ configurable in cfg)
+- [x] indirect illumination (+ configurable in cfg)
 
 ## Improvements
 - [x] configurable light color
@@ -48,7 +48,7 @@
 - [ ] usefull err messages for cfg
 - [x] configurable max recursion and indirect illumination
 - [ ] creating needed directories for cfgs and pics
-- [ ] color scaling (remove `Color.fit` in `structure`)
+- [x] color scaling (other branch)
 
 ## Bugs
 - [x] sqrt vs ** 2.

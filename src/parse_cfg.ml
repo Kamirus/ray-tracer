@@ -142,6 +142,7 @@ let parse json_path =
   let screen = json |> get "screen" screen_instance in
   let objects = json |> get_list "objects" object_instance in
   let lights = json |> get_list "lights" light_instance in
+  let objects = objects @ lights in
   let settings = json |> get "settings" parse_settings in
   let structure = json |> get "structure" @@ structure_instance ~objects ~lights settings in
     let x, y = 
