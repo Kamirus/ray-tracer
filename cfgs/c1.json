@@ -1,6 +1,6 @@
 {
   "settings": {
-    "defaultColor": [70, 70, 70],
+    "defaultColor": [0, 0, 0],
     "maxRecursion": 10,
     "indirectIllumination": {
       "turned on": false,
@@ -39,11 +39,10 @@
   ],
   "lights": [
     {
-      "type": "LightSphere",
-      "center": [30, 40, 44],
-      "intensity": 30000,
-      "color": [255, 0, 0],
-      "radius": 3
+      "type": "LightPoint",
+      "center": [30, 50, 44],
+      "intensity": 300000,
+      "color": [255, 0, 0]
     },
     {
       "type": "LightPoint",
