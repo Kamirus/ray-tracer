@@ -1,6 +1,6 @@
 {
   "settings": {
-    "defaultColor": [0, 0, 0],
+    "defaultColor": [70, 70, 70],
     "maxRecursion": 10,
     "indirectIllumination": {
       "turned on": false,
@@ -15,7 +15,7 @@
       "up": [0, 1, 0],
       "distanceFromScreen": 100
     },
-    "resolution": [1280, 720],
+    "resolution": [800, 600],
     "unitsPerPixel": 0.06
   },
   "structure": {
@@ -33,14 +33,7 @@
       "type": "Sphere",
       "center": [40, 30, 44],
       "radius": 10,
-      "albedo": 0.18,
-      "color": [255, 255, 255]
-    },
-    {
-      "type": "Sphere",
-      "center": [40, 30, 44],
-      "radius": 10,
-      "albedo": 0.18,
+      "albedo": 0,
       "color": [255, 255, 255]
     }
   ],
@@ -50,12 +43,12 @@
       "center": [30, 40, 44],
       "intensity": 30000,
       "color": [255, 0, 0],
-      "radius": 5
+      "radius": 3
     },
     {
       "type": "LightPoint",
-      "center": [50, 40, 44],
-      "intensity": 30000,
+      "center": [50, 50, 44],
+      "intensity": 300000,
       "color": [0, 0, 255]
     }
   ]

@@ -4,7 +4,7 @@ OCAMLINIT_PATH = "/home/kamirus/.ocamlinit"
 OCB_FLAGS = -use-ocamlfind
 OCB = ocamlbuild $(OCB_FLAGS)
 
-run: run.native
+run: run.native run.byte
 
 all: basics complex cfgs
 

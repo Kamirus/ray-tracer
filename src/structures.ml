@@ -144,8 +144,8 @@ module ListStructure : STRUCTURE
 
   (** compute direct illumination *)
   let direct {objects; lights} ({I.biased_point; I.albedo} as intersection) =
-    if albedo < 1. then
-      (* if some light was diffused *)
+    if albedo >= 1. then Color.black
+    else 
       let f acc light = 
         let ray = ray_from_point_to_light biased_point light in
         match closest objects ray with
@@ -155,8 +155,6 @@ module ListStructure : STRUCTURE
         | Some _ -> acc
       in
       List.fold_left f Color.black lights
-    (* else -> no direct illumination *)
-    else Color.black
 
   let calc_color ({objects; max_rec; no_indirect_samples; is_indirect; default_color} as t) ray =
     let rec aux b k ray =

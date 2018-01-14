@@ -90,8 +90,9 @@ module LightSphere : LIGHT
     | None -> None
     | Some d -> 
       let hit_point = Ray.calc_point ray d in
-      let normal = Vector.direction_from_to center hit_point in
-      let albedo = nan in (* nasty workaround to prevent indirect illumination and reflection *)
+      (* inverted normal pointing center *)
+      let normal = Vector.direction_from_to hit_point center in
+      let albedo = 0. in (* nasty workaround to prevent indirect illumination and reflection *)
       Some (Intersection.create ~ray ~d ~color ~normal ~albedo)
 
   let create t = 
