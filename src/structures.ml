@@ -39,7 +39,7 @@ let ray_from_point_to_light point (module L : Ls.LIGHT_INSTANCE) =
    calculate the partial color in this position provided by L light *)
 let color_by_single_light { I.biased_point; I.color; I.normal } 
     (module L : Ls.LIGHT_INSTANCE) =
-  let sunlight = L.Light.get_color L.this biased_point in
+  let sunlight = L.Light.calc_color L.this biased_point in
   let full_color = Color.mul sunlight color in
   (* shading *)
   let dir = L.Light.ray_to_light L.this biased_point |> Ray.direction in
@@ -74,11 +74,11 @@ let rand_dir normal =
     (x, r1, z)
     (* assume normal is [0, 1, 0] *)
     (* let z = Random.float 1. (* [0, 1] *)
-    and a = Random.float @@ 2. *. Util.pi in (* [0, 2pi] *)
-    let k = 1. -. z ** 2. |> sqrt in
-    let x = k *. cos a 
-    and y = k *. sin a in
-    Vector.create x y z *)
+       and a = Random.float @@ 2. *. Util.pi in (* [0, 2pi] *)
+       let k = 1. -. z ** 2. |> sqrt in
+       let x = k *. cos a 
+       and y = k *. sin a in
+       Vector.create x y z *)
   in
   let nt, nb = coordinate_system normal
   and sx, sy, sz = sample ()
@@ -144,8 +144,8 @@ module ListStructure : STRUCTURE
 
   (** compute direct illumination *)
   let direct {objects; lights} ({I.biased_point; I.albedo} as intersection) =
-    if albedo >= 1. then Color.black
-    else
+    if albedo < 1. then
+      (* if some light was diffused *)
       let f acc light = 
         let ray = ray_from_point_to_light biased_point light in
         match closest objects ray with
@@ -155,6 +155,8 @@ module ListStructure : STRUCTURE
         | Some _ -> acc
       in
       List.fold_left f Color.black lights
+    (* else -> no direct illumination *)
+    else Color.black
 
   let calc_color ({objects; max_rec; no_indirect_samples; is_indirect; default_color} as t) ray =
     let rec aux b k ray =
@@ -164,12 +166,14 @@ module ListStructure : STRUCTURE
       | Some ({I.albedo} as intersection) -> 
         (* --- *)
         let reflected = 
-          if albedo <= 0. || k > max_rec then Color.black
-          else reflect intersection (aux b @@ k + 1) in
+          if albedo > 0. && k < max_rec
+          then reflect intersection (aux b @@ k + 1)
+          else Color.black in
         let direct_c = direct t intersection in
         let indirect_c = 
-          if not b || albedo >= 1. || k > max_rec then Color.black 
-          else indirect intersection (aux false @@ k + 1) no_indirect_samples in
+          if b && albedo < 1. && k < max_rec
+          then indirect intersection (aux false @@ k + 1) no_indirect_samples
+          else Color.black in
         (* combine colors *)
         Color.add direct_c indirect_c
         |> Color.mulf (1. -. albedo)

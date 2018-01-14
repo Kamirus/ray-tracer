@@ -2,7 +2,7 @@ module type LIGHT = sig
   include Objects.OBJECT
 
   (* val create : t -> t *)
-  val get_color : t -> Point.t -> Color.t
+  val calc_color : t -> Point.t -> Color.t
   val ray_to_light : t -> Point.t -> Ray.t
 end
 
@@ -36,7 +36,7 @@ module Sun : LIGHT
     let dir = Vector.normalize dir in
     { dir; color }
 
-  let get_color { color } _ = 
+  let calc_color { color } _ = 
     color
 
   let ray_to_light { dir } point =
@@ -52,12 +52,16 @@ module LightPoint : LIGHT
 = struct
   type t = light_point_t
 
+  let get_color { color } =
+    color
 
-  
-  let create { source; color; intensity } = 
-    { source; color; intensity }
+  let intersect t ray =
+    None
 
-  let get_color { source; color; intensity } p = 
+  let create t = 
+    t
+
+  let calc_color { source; color; intensity } p = 
     let d2 = Vector.sub p source |> Vector.length2 in
     let k = 4. *. Util.pi *. d2 in
     Color.fit @@ Color.mulf (intensity /. k) color
@@ -66,4 +70,42 @@ module LightPoint : LIGHT
     let dir = Vector.sub source point in
     let max_d = Vector.length dir in
     Ray.create ~max_d point dir
+end
+
+
+type light_sphere_t = { center : Point.t
+                      ; color : Color.t
+                      ; intensity : float
+                      ; radius : float }
+module LightSphere : LIGHT
+  with type t = light_sphere_t
+= struct
+  type t = light_sphere_t
+
+  let get_color { color } =
+    color
+
+  let intersect { color; center; radius } ray =
+    match Ray.distance_to_sphere ray ~center ~radius with
+    | None -> None
+    | Some d -> 
+      let hit_point = Ray.calc_point ray d in
+      let normal = Vector.direction_from_to center hit_point in
+      let albedo = nan in (* nasty workaround to prevent indirect illumination and reflection *)
+      Some (Intersection.create ~ray ~d ~color ~normal ~albedo)
+
+  let create t = 
+    t
+
+  let calc_color { center; color; intensity } p = 
+    let d2 = Vector.sub p center |> Vector.length2 in
+    let k = 4. *. Util.pi *. d2 in
+    Color.fit @@ Color.mulf (intensity /. k) color
+
+  let ray_to_light { center; radius } point =
+    let vec = Vector.sub center point in
+    let max_d = Vector.length vec in
+    (* prevent intersecting with itself *)
+    let max_d = max_d -. radius -. Util.epsilon in
+    Ray.create ~max_d point vec
 end
