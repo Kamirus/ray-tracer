@@ -37,13 +37,13 @@ let ray_from_point_to_light point (module L : Ls.LIGHT_INSTANCE) =
 
 (* Assume that point is being lit by L (not blocked by anything)
    calculate the partial color in this position provided by L light *)
-let color_by_single_light { I.biased_point; I.color; I.normal } 
+let color_by_single_light { I.biased_point; I.color; I.normal } ray_dir
     (module L : Ls.LIGHT_INSTANCE) =
   let sunlight = L.Light.calc_color L.this biased_point in
   let full_color = Color.mul sunlight color in
   (* shading *)
-  let dir = L.Light.ray_to_light L.this biased_point |> Ray.direction in
-  facing_ratio full_color normal dir
+  (* let dir = L.Light.ray_to_light L.this biased_point |> Ray.direction in *)
+  facing_ratio full_color normal ray_dir
 
 let reflect {I.biased_point; I.normal; I.albedo; I.ray} calc_color = 
   let rd = Ray.direction ray in
@@ -52,51 +52,12 @@ let reflect {I.biased_point; I.normal; I.albedo; I.ray} calc_color =
   let color = calc_color ray in
   Color.mulf albedo color
 
-(** calculate random direction *)
-let rand_dir normal =
-  let coordinate_system n =
-    let (x, y, z) = Vector.values n in
-    let nt = if abs_float x > abs_float y
-      then Vector.create z 0. (-.x)
-           |> Vector.mul @@ 1. /. sqrt (x *. x +. z *. z)
-      else Vector.create 0. (-.z) y 
-           |> Vector.mul @@ 1. /. sqrt (y *. y +. z *. z) in
-    let nb = Vector.cross n nt in
-    nt, nb
-  in
-  let sample () =
-    let r1 = Random.float 1. in
-    let r2 = Random.float 1. in
-    let sin_theta = 1. -. r1 *. r1 |> sqrt in 
-    let phi = 2. *. Util.pi *. r2 in
-    let x = sin_theta *. cos phi in 
-    let z = sin_theta *. sin phi in
-    (x, r1, z)
-    (* assume normal is [0, 1, 0] *)
-    (* let z = Random.float 1. (* [0, 1] *)
-       and a = Random.float @@ 2. *. Util.pi in (* [0, 2pi] *)
-       let k = 1. -. z ** 2. |> sqrt in
-       let x = k *. cos a 
-       and y = k *. sin a in
-       Vector.create x y z *)
-  in
-  let nt, nb = coordinate_system normal
-  and sx, sy, sz = sample ()
-  and nx, ny, nz = Vector.values normal in
-  let ntx, nty, ntz = Vector.values nt in
-  let nbx, nby, nbz = Vector.values nb in
-  (* translate *)
-  Vector.create
-    (sx *. nbx +. sy *. nx +. sz *. ntx)
-    (sx *. nby +. sy *. ny +. sz *. nty)
-    (sx *. nbz +. sy *. nz +. sz *. ntz)
-
 (** compute indirect illumination *)
 let indirect {I.biased_point; I.normal; I.albedo; I.ray} calc_color no_indirect_samples = 
   let rec aux j acc = 
     if j > no_indirect_samples then acc
     else
-      let dir = rand_dir normal in
+      let dir = Util.rand_dir normal in
       let ray = Ray.create biased_point dir in
       aux (j + 1) @@ Color.add acc @@ calc_color ray
   in
@@ -150,7 +111,7 @@ module ListStructure : STRUCTURE
         let ray = ray_from_point_to_light biased_point light in
         match closest objects ray with
         | None ->
-          let c = color_by_single_light intersection light in
+          let c = color_by_single_light intersection (Ray.direction ray) light in
           Color.add acc c
         | Some _ -> acc
       in

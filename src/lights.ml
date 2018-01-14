@@ -105,8 +105,16 @@ module LightSphere : LIGHT
 
   let ray_to_light { center; radius } point =
     let vec = Vector.sub center point in
-    let max_d = Vector.length vec in
-    (* prevent intersecting with itself *)
-    let max_d = max_d -. radius -. Util.epsilon in
-    Ray.create ~max_d point vec
+    let d = Vector.length vec in
+    if d <= radius
+    then Ray.create ~max_d:0. point vec
+    else
+      let dir = Vector.normalize vec in
+
+      let cosmin = 1. -. radius ** 2. /. d ** 2. |> sqrt in
+      let dir = Util.rand_dir dir ~cosmin in
+
+      (* prevent intersecting with itself *)
+      let max_d = d -. radius -. Util.epsilon in
+      Ray.create ~max_d point dir
 end

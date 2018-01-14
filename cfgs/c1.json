@@ -1,10 +1,10 @@
 {
   "settings": {
-    "defaultColor": [0, 0, 0],
+    "defaultColor": [30, 30, 30],
     "maxRecursion": 10,
     "indirectIllumination": {
       "turned on": false,
-      "#samples": 16
+      "#samples": 6
     }
   },
   "screen": {
@@ -39,16 +39,11 @@
   ],
   "lights": [
     {
-      "type": "LightPoint",
-      "center": [30, 50, 44],
-      "intensity": 300000,
-      "color": [255, 0, 0]
-    },
-    {
-      "type": "LightPoint",
-      "center": [50, 50, 44],
-      "intensity": 300000,
-      "color": [0, 0, 255]
+      "type": "LightSphere",
+      "center": [40, 50, 44],
+      "intensity": 5000000,
+      "color": [255, 0, 0],
+      "radius": 1
     }
   ]
 }
