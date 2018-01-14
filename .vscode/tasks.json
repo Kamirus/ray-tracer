@@ -10,7 +10,7 @@
     {
       "label": "build run",
       "type": "shell",
-      "command": "make clean run"
+      "command": "make clean run.byte"
     }
   ]
 }

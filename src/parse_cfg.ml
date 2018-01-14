@@ -4,11 +4,11 @@ module U = Yojson.Basic.Util
 
 let get name f json =
   try U.member name json |> f with
-  | Failure err -> failwith @@ Printf.sprintf "Error: (%s) when parsing '%s'" err name
+  | Failure err -> failwith @@ Printf.sprintf "%s\nduring parsing '%s'" err name
 
 let get_list name f json = 
   try get name U.to_list json |> List.map f with
-  | Failure err -> failwith @@ Printf.sprintf "Error: (%s) when parsing list '%s'" err name
+  | Failure err -> failwith @@ Printf.sprintf "%s\nduring parsing list '%s'" err name
 
 (* Custom convertions *)
 
@@ -92,7 +92,7 @@ let screen_instance json =
     | "PerpectiveScreen" -> perspective_screen json
     | other -> failwith @@ "screen type: " ^ other ^ " not supported"
   in
-  try main json with Failure err -> failwith @@ Printf.sprintf "Error: (%s) when parsing screen '%s'" err @@ typ json
+  try main json with Failure err -> failwith @@ Printf.sprintf "%s\nduring parsing screen '%s'" err @@ typ json
 
 let structure_instance ~objects ~lights 
     {default_color; max_rec; no_indirect_samples; is_indirect} json =
@@ -103,7 +103,7 @@ let structure_instance ~objects ~lights
       create_instance (module ListStructure) {objects; lights; default_color; max_rec; no_indirect_samples; is_indirect}
     | other -> failwith @@ "structure type: " ^ other ^ " not supported"
   in
-  try main json with Failure err -> failwith @@ Printf.sprintf "Error: (%s) when parsing structure '%s'" err @@ typ json
+  try main json with Failure err -> failwith @@ Printf.sprintf "%s\nduring parsing structure '%s'" err @@ typ json
 
 let object_instance json = 
   let plane json = 
@@ -126,7 +126,7 @@ let object_instance json =
     | "Sphere" -> sphere json
     | other -> failwith @@ "object type: " ^ other ^ " not supported"
   in
-  try main json with Failure err -> failwith @@ Printf.sprintf "Error: (%s) when parsing object '%s'" err @@ typ json
+  try main json with Failure err -> failwith @@ Printf.sprintf "%s\nduring parsing object '%s'" err @@ typ json
 
 let light_instance json = 
   let sun json = 
@@ -156,7 +156,7 @@ let light_instance json =
     | "LightSphere" -> light_sphere json
     | other -> failwith @@ "light type: " ^ other ^ " not supported"
   in 
-  try main json with Failure err -> failwith @@ Printf.sprintf "Error: (%s) when parsing light '%s'" err @@ typ json
+  try main json with Failure err -> failwith @@ Printf.sprintf "%s\nduring parsing light '%s'" err @@ typ json
 
 let cast_list ?(acc=[]) lights =
   let cast (module L : Lights.LIGHT_INSTANCE) = 
@@ -178,3 +178,6 @@ let parse json_path =
     json |> get "screen" @@ get "resolution" @@ to_pair U.to_int in
   let raytracer = Raytracers.make_raytracer screen structure in
   (raytracer, string_of_int x, string_of_int y)
+
+let parse json_path =
+  try parse json_path with Failure err -> print_endline err; failwith err

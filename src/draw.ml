@@ -32,4 +32,4 @@ let main ~gen_pixels =
     gen_pixels () |> draw;
     loop ()
   in
-  loop ()
+  try loop () with Graphic_failure _ -> ()
