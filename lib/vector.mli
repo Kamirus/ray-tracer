@@ -27,3 +27,5 @@ val div : float -> t -> t
 val dot : t -> t -> float
 
 val cross : t -> t -> t
+
+val direction_from_to : t -> t -> t

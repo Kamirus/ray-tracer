@@ -18,7 +18,7 @@ let main ~gen_pixels =
   let x = Array.length pixels     |> string_of_int in
   let y = Array.length pixels.(0) |> string_of_int in
   open_graph @@ " " ^ x ^ "x" ^ y;
-  (* auto_synchronize false; *)
+  auto_synchronize false;
   clear_graph ();
 
   set_window_title "Ray Tracer @KamilListopad";
@@ -32,4 +32,4 @@ let main ~gen_pixels =
     gen_pixels () |> draw;
     loop ()
   in
-  loop ()
+  try loop () with Graphic_failure _ -> ()

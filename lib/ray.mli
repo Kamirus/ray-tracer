@@ -11,3 +11,9 @@ val direction : t -> Vector.t
 val max_d : t -> float
 
 val calc_point : t -> float -> Point.t
+
+(** [distance_to_sphere ray ~center ~radius]
+    center - sphere center
+    radius - sphere radius
+*)
+val distance_to_sphere : t -> center:Point.t -> radius:float -> float option

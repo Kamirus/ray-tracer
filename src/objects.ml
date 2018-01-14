@@ -70,31 +70,15 @@ module Sphere : OBJECT
 
   let create t = 
     t
-  let get_color {color} = 
+
+  let get_color { color } = 
     color
-  let get_normal {center} p = 
-    Vector.sub p center |> Vector.normalize
-  let intersect ({center; radius; color; albedo} as t) ray =
-    let raydir = Ray.direction ray
-    and p = Vector.sub (Ray.source ray) center in
 
-    let a = Vector.length2 raydir
-    and b = 2. *. Vector.dot raydir p
-    and c = Vector.length2 p -. radius ** 2. in
-
-    let delta = b ** 2. -. 4. *. a *. c in
-
-    if delta < 0. then None
-    else
-      let return d =
-        let hit_point = Ray.calc_point ray d in
-        let normal = get_normal t hit_point in
-        Some (Intersection.create ~ray ~d ~color ~normal ~albedo)
-      in
-      let d1 = (-. b -. sqrt delta) /. (2. *. a) in
-      if Util.valid d1 && d1 <= Ray.max_d ray then return d1
-      else
-        let d2 = (-. b +. sqrt delta) /. (2. *. a) in
-        if Util.valid d2 && d1 <= Ray.max_d ray then return d2
-        else None
+  let intersect { center; radius; color; albedo } ray =
+    match Ray.distance_to_sphere ray ~center ~radius with
+    | None -> None
+    | Some d -> 
+      let hit_point = Ray.calc_point ray d in
+      let normal = Vector.direction_from_to center hit_point in
+      Some (Intersection.create ~ray ~d ~color ~normal ~albedo)
 end

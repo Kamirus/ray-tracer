@@ -3,10 +3,12 @@ module U = Yojson.Basic.Util
 (* Basic building blocks *)
 
 let get name f json =
-  U.member name json |> f
+  try U.member name json |> f with
+  | Failure err -> failwith @@ Printf.sprintf "%s\nduring parsing '%s'" err name
 
 let get_list name f json = 
-  U.member name json |> U.to_list |> List.map f
+  try get name U.to_list json |> List.map f with
+  | Failure err -> failwith @@ Printf.sprintf "%s\nduring parsing list '%s'" err name
 
 (* Custom convertions *)
 
@@ -85,17 +87,23 @@ let screen_instance json =
     let module S = Screens.MakePerspectiveScreen (C.C) in
     Screens.create_instance (module S) (C.this, x, y, ratio)
   in
-  match typ json with
-  | "PerpectiveScreen" -> perspective_screen json
-  | other -> failwith @@ "screen type: " ^ other ^ " not supported"
+  let main json =
+    match typ json with
+    | "PerpectiveScreen" -> perspective_screen json
+    | other -> failwith @@ "screen type: " ^ other ^ " not supported"
+  in
+  try main json with Failure err -> failwith @@ Printf.sprintf "%s\nduring parsing screen '%s'" err @@ typ json
 
 let structure_instance ~objects ~lights 
     {default_color; max_rec; no_indirect_samples; is_indirect} json =
-  let open Structures in
-  match typ json with
-  | "ListStructure" -> 
-    create_instance (module ListStructure) {objects; lights; default_color; max_rec; no_indirect_samples; is_indirect}
-  | other -> failwith @@ "structure type: " ^ other ^ " not supported"
+  let main json =
+    let open Structures in
+    match typ json with
+    | "ListStructure" -> 
+      create_instance (module ListStructure) {objects; lights; default_color; max_rec; no_indirect_samples; is_indirect}
+    | other -> failwith @@ "structure type: " ^ other ^ " not supported"
+  in
+  try main json with Failure err -> failwith @@ Printf.sprintf "%s\nduring parsing structure '%s'" err @@ typ json
 
 let object_instance json = 
   let plane json = 
@@ -112,10 +120,13 @@ let object_instance json =
     let color = json |> color in
     Objects.create_instance (module Objects.Sphere) {Objects.center; radius; albedo; color}
   in
-  match typ json with
-  | "Plane" -> plane json
-  | "Sphere" -> sphere json
-  | other -> failwith @@ "object type: " ^ other ^ " not supported"
+  let main json =
+    match typ json with
+    | "Plane" -> plane json
+    | "Sphere" -> sphere json
+    | other -> failwith @@ "object type: " ^ other ^ " not supported"
+  in
+  try main json with Failure err -> failwith @@ Printf.sprintf "%s\nduring parsing object '%s'" err @@ typ json
 
 let light_instance json = 
   let sun json = 
@@ -130,10 +141,28 @@ let light_instance json =
     Lights.create_instance (module Lights.LightPoint) 
       {Lights.source; color; intensity}
   in
-  match typ json with
-  | "Sun" -> sun json
-  | "LightPoint" -> light_point json
-  | other -> failwith @@ "light type: " ^ other ^ " not supported"
+  let light_sphere json =
+    let center = json |> point "center" in
+    let color = json |> color in
+    let intensity = json |> get "intensity" to_float in
+    let radius = json |> get "radius" to_float in
+    Lights.create_instance (module Lights.LightSphere) 
+      {Lights.center; color; intensity; radius}
+  in
+  let main json = 
+    match typ json with
+    | "Sun" -> sun json
+    | "LightPoint" -> light_point json
+    | "LightSphere" -> light_sphere json
+    | other -> failwith @@ "light type: " ^ other ^ " not supported"
+  in 
+  try main json with Failure err -> failwith @@ Printf.sprintf "%s\nduring parsing light '%s'" err @@ typ json
+
+let cast_list ?(acc=[]) lights =
+  let cast (module L : Lights.LIGHT_INSTANCE) = 
+    Objects.create_instance (module L.Light) L.this
+  in
+  List.fold_left (fun acc l -> cast l :: acc) acc lights
 
 (* PUBLIC *)
 
@@ -142,9 +171,13 @@ let parse json_path =
   let screen = json |> get "screen" screen_instance in
   let objects = json |> get_list "objects" object_instance in
   let lights = json |> get_list "lights" light_instance in
+  let objects = cast_list lights ~acc:objects in (* add lights to objects *)
   let settings = json |> get "settings" parse_settings in
   let structure = json |> get "structure" @@ structure_instance ~objects ~lights settings in
-    let x, y = 
-      json |> get "screen" @@ get "resolution" @@ to_pair U.to_int in
-    let raytracer = Raytracers.make_raytracer screen structure in
-    (raytracer, string_of_int x, string_of_int y)
+  let x, y = 
+    json |> get "screen" @@ get "resolution" @@ to_pair U.to_int in
+  let raytracer = Raytracers.make_raytracer screen structure in
+  (raytracer, string_of_int x, string_of_int y)
+
+let parse json_path =
+  try parse json_path with Failure err -> print_endline err; failwith err
