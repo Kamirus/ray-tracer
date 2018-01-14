@@ -26,16 +26,17 @@ let valid_xy (x_max, y_max) x y =
     translate (x,y) from (0,0) in the bottom left corner 
     to the center of the screen *)
 let vec2d_to_pixel x_max y_max ratio x y =
-  (* from x,y perspective *)
-  (* left bottom corner of the screen is 0,0 *)
-  let x = x - x_max / 2
-  and y = y - y_max / 2 in
-  (* screen center is now 0,0 *)
-  (* translate physical coordinates into virtual (from pixels to units) *)
-  let x' = float_of_int x *. ratio 
-  and y' = float_of_int y *. ratio in
-  (x', y')
-
+  let one x x_max =
+    (* from x perspective *)
+    (* left bottom corner of the screen is 0,0 *)
+    let x = x - x_max / 2 in
+    (* screen center is now 0,0 *)
+    (* take random offset (-0.5, 0.5) *)
+    let off = Random.float 1. -. 0.5 in
+    (* translate physical coordinates into virtual (from pixels to units) *)
+    x |> float_of_int |> (+.) off |> ( *.) ratio
+  in
+  (one x x_max, one y y_max)
 (* --- *)
 
 module MakePerspectiveScreen (C : Cameras.CAMERA) : SCREEN 

@@ -52,7 +52,8 @@ let color ?(name="color") json =
 type settings = { default_color : Color.t
                 ; max_rec : int
                 ; no_indirect_samples : int
-                ; is_indirect : bool }
+                ; is_indirect : bool
+                ; samples : int }
 
 let parse_settings json = 
   let get name f default json =
@@ -67,7 +68,8 @@ let parse_settings json =
   let default_color = json |> color ~name:"defaultColor" in
   let max_rec = json |> get "maxRecursion" U.to_int 10 in
   let no_indirect_samples, is_indirect = json |> get "indirectIllumination" indirect (32, false) in
-  { default_color; max_rec; no_indirect_samples; is_indirect }
+  let samples = json |> get "#samples" U.to_int 1 in
+  { default_color; max_rec; no_indirect_samples; is_indirect; samples }
 
 (* Parsing compound objects *)
 
@@ -176,7 +178,7 @@ let parse json_path =
   let structure = json |> get "structure" @@ structure_instance ~objects ~lights settings in
   let x, y = 
     json |> get "screen" @@ get "resolution" @@ to_pair U.to_int in
-  let raytracer = Raytracers.make_raytracer screen structure in
+  let raytracer = Raytracers.make_raytracer settings.samples screen structure in
   (raytracer, string_of_int x, string_of_int y)
 
 let parse json_path =
