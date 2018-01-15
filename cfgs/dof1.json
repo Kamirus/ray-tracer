@@ -1,0 +1,89 @@
+{
+  "settings": {
+    "defaultColor": [0, 0, 0],
+    "maxRecursion": 10,
+    "indirectIllumination": {
+      "turned on": false,
+      "#samples": 20
+    },
+    "#samples": 1
+  },
+  "screen": {
+    "type": "PerpectiveScreen",
+    "camera": {
+      "sensor": {
+        "width": 8,
+        "height": 6
+      },
+      "center": [40, 35, -100],
+      "forward": [0, 0, 1],
+      "up": [0, 1, 0],
+      "distanceFromScreen": 210
+    },
+    "resolution": [800, 600],
+    "unitsPerPixel": 0.14
+  },
+  "structure": {
+    "type": "ListStructure"
+  },
+  "objects": [
+    {
+      "type": "Plane",
+      "point": [40, 20, 44],
+      "normal": [0, 1, -0.1],
+      "albedo": 0,
+      "color": [255, 255, 255]
+    },
+    {
+      "type": "Sphere",
+      "center": [20, 20, 10],
+      "radius": 5,
+      "albedo": 0,
+      "color": [255, 0, 0]
+    },
+    {
+      "type": "Sphere",
+      "center": [28, 25, 30],
+      "radius": 5,
+      "albedo": 0,
+      "color": [0, 255, 0]
+    },
+    {
+      "type": "Sphere",
+      "center": [38, 29, 60],
+      "radius": 5,
+      "albedo": 0,
+      "color": [0, 0, 255]
+    },
+    {
+      "type": "Sphere",
+      "center": [53, 31, 80],
+      "radius": 5,
+      "albedo": 0,
+      "color": [255, 0, 255]
+    },
+    {
+      "type": "Sphere",
+      "center": [70, 33, 110],
+      "radius": 5,
+      "albedo": 0,
+      "color": [0, 255, 255]
+    },
+    {
+      "type": "Sphere",
+      "center": [90, 35, 140],
+      "radius": 5,
+      "albedo": 0,
+      "color": [255, 255, 0]
+    }
+  ],
+  "lights": [
+    {
+      "type": "LightSphere",
+      "center": [60, 55, -80],
+      "intensity": 5000000,
+      "color": [255, 255, 255],
+      "radius": 1
+    }
+  ]
+}

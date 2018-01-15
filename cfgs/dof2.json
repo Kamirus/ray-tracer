@@ -1,0 +1,117 @@
+{
+  "settings": {
+    "defaultColor": [0, 0, 0],
+    "maxRecursion": 10,
+    "indirectIllumination": {
+      "turned on": false,
+      "#samples": 20
+    },
+    "#samples": 1
+  },
+  "screen": {
+    "type": "PerpectiveScreen",
+    "camera": {
+      "sensor": {
+        "width": 4,
+        "height": 4
+      },
+      "center": [40, 35, -100],
+      "forward": [0, 0, 1],
+      "up": [0, 1, 0],
+      "distanceFromScreen": 110
+    },
+    "resolution": [800, 600],
+    "unitsPerPixel": 0.08
+  },
+  "structure": {
+    "type": "ListStructure"
+  },
+  "objects": [
+    {
+      "type": "Plane",
+      "point": [40, 20, 44],
+      "normal": [0, 1, -0.1],
+      "albedo": 0,
+      "color": [255, 255, 255]
+    },
+    {
+      "type": "Sphere",
+      "center": [10, 20, 10],
+      "radius": 15,
+      "albedo": 0,
+      "color": [255, 0, 0]
+    },
+    {
+      "type": "Sphere",
+      "center": [40, 20, 10],
+      "radius": 5,
+      "albedo": 0,
+      "color": [255, 255, 0]
+    },
+    {
+      "type": "Sphere",
+      "center": [70, 20, 10],
+      "radius": 15,
+      "albedo": 0,
+      "color": [255, 0, 0]
+    },
+    {
+      "type": "Sphere",
+      "center": [20, 29, 60],
+      "radius": 7,
+      "albedo": 0,
+      "color": [0, 0, 255]
+    },
+    {
+      "type": "Sphere",
+      "center": [40, 29, 60],
+      "radius": 7,
+      "albedo": 0,
+      "color": [0, 0, 255]
+    },
+    {
+      "type": "Sphere",
+      "center": [60, 29, 60],
+      "radius": 7,
+      "albedo": 0,
+      "color": [0, 0, 255]
+    },
+    {
+      "type": "Sphere",
+      "center": [85, 35, 140],
+      "radius": 5,
+      "albedo": 0,
+      "color": [255, 255, 0]
+    },
+    {
+      "type": "Sphere",
+      "center": [55, 35, 140],
+      "radius": 5,
+      "albedo": 0,
+      "color": [255, 255, 0]
+    },
+    {
+      "type": "Sphere",
+      "center": [25, 35, 140],
+      "radius": 5,
+      "albedo": 0,
+      "color": [255, 255, 0]
+    },
+    {
+      "type": "Sphere",
+      "center": [0, 35, 140],
+      "radius": 5,
+      "albedo": 0,
+      "color": [255, 255, 0]
+    }
+  ],
+  "lights": [
+    {
+      "type": "LightSphere",
+      "center": [60, 55, -80],
+      "intensity": 5000000,
+      "color": [255, 255, 255],
+      "radius": 1
+    }
+  ]
+}
