@@ -3,21 +3,21 @@
     "defaultColor": [0, 0, 0],
     "maxRecursion": 10,
     "indirectIllumination": {
-      "turned on": true,
-      "#samples": 20
+      "turned on": false,
+      "#samples": 1
     },
-    "#samples": 10
+    "#samples": 5
   },
   "screen": {
     "type": "PerpectiveScreen",
     "camera": {
-      "center": [40, 30, -100],
+      "center": [40, 40, -100],
       "forward": [0, 0, 1],
       "up": [0, 1, 0],
       "distanceFromScreen": 100
     },
     "resolution": [800, 600],
-    "unitsPerPixel": 0.06
+    "unitsPerPixel": 0.01
   },
   "structure": {
     "type": "ListStructure"
@@ -40,17 +40,10 @@
   ],
   "lights": [
     {
-      "type": "LightSphere",
-      "center": [30, 50, 44],
+      "type": "LightPoint",
+      "center": [40, 50, 44],
       "intensity": 5000000,
       "color": [255, 0, 0],
-      "radius": 3
-    },
-    {
-      "type": "LightSphere",
-      "center": [50, 50, 44],
-      "intensity": 5000000,
-      "color": [0, 255, 0],
       "radius": 1
     }
   ]

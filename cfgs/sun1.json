@@ -4,8 +4,9 @@
     "maxRecursion": 10,
     "indirectIllumination": {
       "turned on": true,
-      "#samples": 256
-    }
+      "#samples": 10
+    },
+    "#samples": 10
   },
   "screen": {
     "type": "PerpectiveScreen",
@@ -15,7 +16,7 @@
       "up": [0, 1, 1],
       "distanceFromScreen": 100
     },
-    "resolution": [1280, 720],
+    "resolution": [800, 600],
     "unitsPerPixel": 0.06
   },
   "structure": {

@@ -130,13 +130,14 @@ module ListStructure : STRUCTURE
           else Color.black in
         let direct_c = direct t intersection in
         let indirect_c = 
-          if b && albedo < 1. && k < max_rec
-          then indirect intersection (aux false @@ k + 1) no_indirect_samples
+          if b > 0 && albedo < 1. && k < max_rec
+          then indirect intersection (aux (b - 1) @@ k + 1) no_indirect_samples
           else Color.black in
         (* combine colors *)
         Color.add direct_c indirect_c
         |> Color.mulf (1. -. albedo)
         |> Color.add reflected
     in
-    Color.fit @@ aux is_indirect 1 ray
+    let indirect_depth = if is_indirect then 2 else 0 in
+    Color.fit @@ aux indirect_depth 1 ray
 end
