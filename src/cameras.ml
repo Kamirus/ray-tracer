@@ -64,7 +64,8 @@ module Camera : CAMERA
 end
 
 
-type sensor_cfg = (Camera.t * int * int * float * float)
+type sensor_cfg = camera_cfg * float * float
+
 module Sensor : CAMERA
   with type config = sensor_cfg
 = struct
@@ -74,9 +75,8 @@ module Sensor : CAMERA
            ; width : float
            ; height : float }
 
-  let create (camera, x_max, y_max, ratio, divisor) =
-    let width  = (float_of_int x_max) *. ratio /. divisor in
-    let height = (float_of_int y_max) *. ratio /. divisor in
+  let create (camera_cfg, width, height) =
+    let camera = CameraUtil.create camera_cfg in
     { camera; width; height }
 
   let random_xy { width; height } =

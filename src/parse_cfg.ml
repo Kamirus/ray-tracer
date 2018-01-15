@@ -74,15 +74,20 @@ let parse_settings json =
 (* Parsing compound objects *)
 
 let camera_instance json = 
-  let c = json |> point "center" in
-  let forward = json |> vector "forward" in
-  let up = json |> vector "up" in
-  let d = json |> get "distanceFromScreen" to_float in
-  Cameras.create_instance (module Cameras.Camera) (c, forward, up, d) 
-
-let sensor_instance json = 
-  let camera = camera_instance json in
-  Cameras.create_instance (module Cameras.Sensor) (camera, )
+  let camera_cfg json = 
+    let c = json |> point "center" in
+    let forward = json |> vector "forward" in
+    let up = json |> vector "up" in
+    let d = json |> get "distanceFromScreen" to_float in
+    (c, forward, up, d)
+  in
+  match U.member "sensor" json with
+  | `Null ->
+    Cameras.create_instance (module Cameras.Camera) (camera_cfg json) 
+  | sensor_json -> 
+    let width  = sensor_json |> get "width"  to_float in
+    let height = sensor_json |> get "height" to_float in
+    Cameras.create_instance (module Cameras.Sensor) (camera_cfg json, width, height)
 
 let screen_instance json = 
   let perspective_screen json = 

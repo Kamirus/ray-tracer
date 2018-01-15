@@ -11,7 +11,7 @@
   "screen": {
     "type": "PerpectiveScreen",
     "camera": {
-      "center": [40, 30, -100],
+      "center": [40, 35, -100],
       "forward": [0, 0, 1],
       "up": [0, 1, 0],
       "distanceFromScreen": 100
