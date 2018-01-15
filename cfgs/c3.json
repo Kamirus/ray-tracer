@@ -3,7 +3,7 @@
     "defaultColor": [0, 0, 0],
     "maxRecursion": 10,
     "indirectIllumination": {
-      "turned on": true,
+      "turned on": false,
       "#samples": 32
     }
   },

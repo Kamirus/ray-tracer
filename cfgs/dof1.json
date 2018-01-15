@@ -4,7 +4,7 @@
     "maxRecursion": 10,
     "indirectIllumination": {
       "turned on": false,
-      "#samples": 20
+      "#samples": 10
     },
     "#samples": 1
   },
@@ -43,6 +43,13 @@
     },
     {
       "type": "Sphere",
+      "center": [60, 20, 10],
+      "radius": 5,
+      "albedo": 0,
+      "color": [255, 0, 0]
+    },
+    {
+      "type": "Sphere",
       "center": [28, 25, 30],
       "radius": 5,
       "albedo": 0,
@@ -75,6 +82,13 @@
       "radius": 5,
       "albedo": 0,
       "color": [255, 255, 0]
+    },
+    {
+      "type": "Sphere",
+      "center": [-7, 35, 140],
+      "radius": 5,
+      "albedo": 0,
+      "color": [255, 255, 0]
     }
   ],
   "lights": [
@@ -83,7 +97,7 @@
       "center": [60, 55, -80],
       "intensity": 5000000,
       "color": [255, 255, 255],
-      "radius": 1
+      "radius": 10
     }
   ]
 }

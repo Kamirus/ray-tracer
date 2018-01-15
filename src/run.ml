@@ -24,6 +24,6 @@ let () =
   match Sys.argv with
   | [| _; filename |] -> 
     Draw.main ~gen_pixels:(get_gen_pixels filename)
-  | [| _; filename; "save" |] -> 
-    Toimage.main ~name:filename ~pixels:(get_gen_pixels filename ())
+  | [| _; filename; output_name |] -> 
+    Toimage.main ~name:output_name ~pixels:(get_gen_pixels filename ())
   | _ -> failwith "provide config file name"
