@@ -80,6 +80,10 @@ let camera_instance json =
   let d = json |> get "distanceFromScreen" to_float in
   Cameras.create_instance (module Cameras.Camera) (c, forward, up, d) 
 
+let sensor_instance json = 
+  let camera = camera_instance json in
+  Cameras.create_instance (module Cameras.Sensor) (camera, )
+
 let screen_instance json = 
   let perspective_screen json = 
     let (module C : Cameras.CAMERA_INSTANCE) = 
