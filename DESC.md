@@ -31,12 +31,7 @@ Example:
 ```json
 {
   "type": "PerpectiveScreen",
-  "camera": {
-    "center": [0, 30, -150],
-    "forward": [0, 0, 1],
-    "up": [0, 1, 0],
-    "distanceFromScreen": 100
-  },
+  "camera": { ... },
   "resolution": [800, 600],
   "defaultColor": [100, 100, 100],
   "unitsPerPixel": 0.1
@@ -44,12 +39,13 @@ Example:
 ```
 
 ## Camera
-| key                | value type    | description                                                                                |
-| ------------------ | ------------- | ------------------------------------------------------------------------------------------ |
-| center             | point         | camera point                                                                               |
-| forward            | vector        | the direction in which the camera is heading                                               |
-| up                 | vector        | the direction to the top of the screen. It must be perpendicular to the **forward** vector |
-| distanceFromScreen | `<float/int>` | distance between screen center and camera point                                            |
+| key                | value type                     | description                                                                                                             |
+| ------------------ | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| center             | point                          | camera point                                                                                                            |
+| forward            | vector                         | the direction in which the camera is heading                                                                            |
+| up                 | vector                         | the direction to the top of the screen. It must be perpendicular to the **forward** vector                              |
+| distanceFromScreen | `<float/int>`                  | distance between screen center and camera point                                                                         |
+| sensor             | [`<float/int>`, `<float/int>`] | optional value, allows to set size of the surface that detects light, the larger it is, the lower the depth of field is |
 
 Example:
 ```json
@@ -57,7 +53,8 @@ Example:
   "center": [0, 30, -150],
   "forward": [0, 0, 1],
   "up": [0, 1, 0],
-  "distanceFromScreen": 100
+  "distanceFromScreen": 100,
+  "sensor": [8, 6]
 }
 ```
 
@@ -121,11 +118,11 @@ Example:
 # Lights
 
 ## Sun
-| key       | value type | description                      |
-| --------- | ---------- | -------------------------------- |
-| type      | "Sun"      |                                  |
-| direction | vector     | direction of incoming light rays |
-| color     | color      |                                  |
+| key       | value type | description                             |
+| --------- | ---------- | --------------------------------------- |
+| type      | "Sun"      | light rays come from the same direction |
+| direction | vector     | direction of incoming light rays        |
+| color     | color      |                                         |
 
 Example:
 ```json
@@ -137,12 +134,12 @@ Example:
 ```
 
 ## LightPoint
-| key       | value type    | description          |
-| --------- | ------------- | -------------------- |
-| type      | "LightPoint"  |                      |
-| center    | point         | center of the sphere |
-| intensity | `<float/int>` |                      |
-| color     | color         |                      |
+| key       | value type    | description                               |
+| --------- | ------------- | ----------------------------------------- |
+| type      | "LightPoint"  | emmits light rays from the `center` point |
+| center    | point         | center of the sphere                      |
+| intensity | `<float/int>` |                                           |
+| color     | color         |                                           |
 
 Example:
 ```json
@@ -154,8 +151,37 @@ Example:
 }
 ```
 
+## LightSphere
+| key       | value type    | description                                                             |
+| --------- | ------------- | ----------------------------------------------------------------------- |
+| type      | "LightSphere" | allows soft shadows, light rays come from whatever point on this sphere |
+| center    | point         | center of the sphere                                                    |
+| intensity | `<float/int>` |                                                                         |
+| color     | color         |                                                                         |
+| radius    | `<float/int>` |                                                                         |
+
+Example:
+```json
+{
+  "type": "LightSphere",
+  "center": [0, 50, 0],
+  "intensity": 30000,
+  "color": [255, 0, 0],
+  "radius": 10
+}
+```
+
 
 # Settings
+| key                               | value type | description                                                                                                 |
+| --------------------------------- | ---------- | ----------------------------------------------------------------------------------------------------------- |
+| defaultColor                      | color      | background color                                                                                            |
+| maxRecursion                      | `<int>`    | reflection depth                                                                                            |
+| #samples                          | `<int>`    | anti-aliasing quality                                                                                       |
+| indirectIllumination["turned on"] | `<bool>`   | global illumination switch on/off                                                                           |
+| indirectIllumination["#samples"]  | `<int>`    | no samples used to calculate global illumination for one pixel (multiplied by #samples from anti-aliasing!) |
+
+*Can be omitted, defaults will be used*
 
 Example:
 ```json
@@ -163,6 +189,7 @@ Example:
   "settings": {
     "defaultColor": [40, 40, 40],    
     "maxRecursion": 10,
+    "#samples": 1,
     "indirectIllumination": {
       "turned on": true,
       "#samples": 32

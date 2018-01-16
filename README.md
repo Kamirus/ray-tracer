@@ -1,11 +1,14 @@
 # Ray Tracer
 
 ## Dependencies
-| package  | version  |
-| -------- | -------- |
-| graphics | 1.0      |
-| yojson   | 1.4.0    |
-| imagelib | 20170118 |
+| package    | version  |
+| ---------- | -------- |
+| ocaml      | ?        |
+| ocamlbuild | ?        |
+| graphics   | 1.0      |
+| graphics   | 1.0      |
+| yojson     | 1.4.0    |
+| imagelib   | 20170118 |
 
 ## Usage
 1. **Build:** `make`
@@ -22,7 +25,9 @@
 ## Key features
 - [x] configuration file
 - [ ] raport
-- [ ] documentation - .mli's
+- [ ] documentation
+- [ ] update cfg specification
+- [ ] update dependecies
 - [x] perspective camera
 - [x] dump to img file
 
@@ -31,14 +36,12 @@
 - [x] configurable screen (position, resolution)
 - [x] simple shading - `Facing Ratio`
 - [x] new surface type: mirror
-- [x] mixed surface type 
-- [ ] Gamma correction
-- [ ] shutter + physical sizes of light sources
+- [x] mixed surface type (diffuse + reflection)
+- [x] DOF
 - [x] supersampling (+ configurable in cfg)
 - [x] soft shadows for LightSphere
 - [x] indirect illumination (+ configurable in cfg)
-- [ ] update cfg specification
-- [ ] update dependecies
+- [ ] Gamma correction
 
 ## Improvements
 - [x] configurable light color

@@ -57,8 +57,10 @@ type settings = { default_color : Color.t
 
 let parse_settings json = 
   let get name f default json =
-    try get name f json with
-    | _ -> default
+    try get name f json with _ -> default
+  in
+  let color ?(name="color") json =
+    try color ~name json with _ -> Color.black
   in
   let indirect json = 
     let no_indirect_samples = json |> get "#samples" U.to_int 32 in
@@ -85,9 +87,9 @@ let camera_instance json =
   | `Null ->
     Cameras.create_instance (module Cameras.Camera) (camera_cfg json) 
   | sensor_json -> 
-    let width  = sensor_json |> get "width"  to_float in
-    let height = sensor_json |> get "height" to_float in
-    Cameras.create_instance (module Cameras.Sensor) (camera_cfg json, width, height)
+    let width, height = sensor_json |> to_pair to_float in
+    Cameras.create_instance (module Cameras.Sensor)
+      (camera_cfg json, width, height)
 
 let screen_instance json = 
   let perspective_screen json = 

@@ -11,10 +11,7 @@
   "screen": {
     "type": "PerpectiveScreen",
     "camera": {
-      "sensor": {
-        "width": 8,
-        "height": 6
-      },
+      "sensor": [8, 6],
       "center": [40, 35, -100],
       "forward": [0, 0, 1],
       "up": [0, 1, 0],
