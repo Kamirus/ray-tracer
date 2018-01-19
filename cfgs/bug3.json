@@ -1,10 +1,10 @@
 {
   "settings": {
-    "defaultColor": [40, 40, 40],    
+    "defaultColor": [0, 0, 0],    
     "maxRecursion": 10,
     "indirectIllumination": {
       "turned on": true,
-      "#samples": 32
+      "#samples": 5
     }
   },
   "screen": {
@@ -46,8 +46,9 @@
   ],
   "lights": [
     {
-      "type": "LightPoint",
-      "center": [-55, 0, 30],
+      "type": "LightSphere",
+      "radius": 10,
+      "center": [-55, 0, 0],
       "intensity": 40000,
       "color": [255, 255, 255]
     }

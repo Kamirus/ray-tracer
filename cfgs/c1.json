@@ -6,7 +6,7 @@
       "turned on": false,
       "#samples": 20
     },
-    "#samples": 1
+    "#samples": 5
   },
   "screen": {
     "type": "PerpectiveScreen",

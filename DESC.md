@@ -39,13 +39,13 @@ Example:
 ```
 
 ## Camera
-| key                | value type                     | description                                                                                                             |
-| ------------------ | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
-| center             | point                          | camera point                                                                                                            |
-| forward            | vector                         | the direction in which the camera is heading                                                                            |
-| up                 | vector                         | the direction to the top of the screen. It must be perpendicular to the **forward** vector                              |
-| distanceFromScreen | `<float/int>`                  | distance between screen center and camera point                                                                         |
-| sensor             | [`<float/int>`, `<float/int>`] | optional value, allows to set size of the surface that detects light, the larger it is, the lower the depth of field is |
+| key                | value type                     | description                                                                                                                         |
+| ------------------ | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
+| center             | point                          | camera point                                                                                                                        |
+| forward            | vector                         | the direction in which the camera is heading                                                                                        |
+| up                 | vector                         | the direction to the top of the screen. It must be perpendicular to the **forward** vector                                          |
+| distanceFromScreen | `<float/int>`                  | distance between screen center and camera point. When `sensor` is provided it's focus distance (distance at which a lens can focus) |
+| sensor             | [`<float/int>`, `<float/int>`] | optional value, allows to set size of the surface that detects light, the larger it is, the lower the depth of field is             |
 
 Example:
 ```json
