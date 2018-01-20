@@ -4,15 +4,15 @@
     "maxRecursion": 10,
     "indirectIllumination": {
       "turned on": false,
-      "#samples": 20
+      "#samples": 5
     },
-    "#samples": 5
+    "#samples": 200
   },
   "screen": {
     "type": "PerpectiveScreen",
     "camera": {
-      "center": [40, 35, -100],
-      "forward": [0, 0, 1],
+      "center": [0, 42, -100],
+      "forward": [0, -0.2, 1],
       "up": [0, 1, 0],
       "distanceFromScreen": 100
     },
@@ -25,33 +25,33 @@
   "objects": [
     {
       "type": "Plane",
-      "point": [40, 20, 44],
+      "point": [0, 0, 50],
       "normal": [0, 1, -0.1],
       "albedo": 0.18,
       "color": [255, 255, 255]
     },
     {
       "type": "Sphere",
-      "center": [40, 30, 44],
-      "radius": 10,
-      "albedo": 0,
+      "center": [0, 15, 50],
+      "radius": 15,
+      "albedo": 0.18,
       "color": [255, 255, 255]
     }
   ],
   "lights": [
     {
       "type": "LightSphere",
-      "center": [30, 50, 44],
-      "intensity": 5000000,
+      "center": [-130, 250, 50],
+      "intensity": 800000,
       "color": [255, 0, 0],
-      "radius": 3
+      "radius": 50
     },
     {
       "type": "LightSphere",
-      "center": [50, 50, 44],
-      "intensity": 5000000,
-      "color": [0, 255, 0],
-      "radius": 1
+      "center": [500, 500, 44],
+      "intensity": 10000000,
+      "color": [0, 0, 255],
+      "radius": 250
     }
   ]
 }

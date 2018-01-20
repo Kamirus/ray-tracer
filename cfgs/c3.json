@@ -15,7 +15,7 @@
       "up": [0, 1, 0],
       "distanceFromScreen": 100
     },
-    "resolution": [1280, 720],
+    "resolution": [800, 600],
     "unitsPerPixel": 0.06
   },
   "structure": {

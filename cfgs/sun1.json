@@ -3,21 +3,21 @@
     "defaultColor": [0, 0, 0],
     "maxRecursion": 10,
     "indirectIllumination": {
-      "turned on": false,
-      "#samples": 10
+      "turned on": true,
+      "#samples": 5
     },
-    "#samples": 1
+    "#samples": 50
   },
   "screen": {
     "type": "PerpectiveScreen",
     "camera": {
-      "center": [0, 100, -60],
+      "center": [8, 103, -60],
       "forward": [0, -1.5, 1],
       "up": [0, 1, 1],
       "distanceFromScreen": 100
     },
-    "resolution": [800, 600],
-    "unitsPerPixel": 0.06
+    "resolution": [1920, 1080],
+    "unitsPerPixel": 0.045
   },
   "structure": {
     "type": "ListStructure"

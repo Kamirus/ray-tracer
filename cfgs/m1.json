@@ -1,6 +1,7 @@
 {
   "settings": {
-    "defaultColor": [0, 0, 0]
+    "defaultColor": [0, 0, 0],
+    "#samples": 20
   },
   "screen": {
     "type": "PerpectiveScreen",
@@ -10,7 +11,7 @@
       "up": [0, 1, 0.7],
       "distanceFromScreen": 40
     },
-    "resolution": [1280, 720],
+    "resolution": [1920, 1080],
     "unitsPerPixel": 0.06
   },
   "structure": {
