@@ -46,6 +46,25 @@ Others:
 - rendered picture on screen is being rerender every 1s to apply changed settings without restarting program
 
 
+## Architecture
+
+This project is divided into two parts: `lib` and `src`. First contains modules which interfaces are unlikely to change, so these can be considered as simple building blocks (like vectors, colors, rays, etc.).
+
+When rendering picture on screen, the **flow of control** is as follows. 
+
+Simple command line handler in `run.ml` orders `parse_cfg.ml` to parse scene description file, which as a result returns **raytracer** function that takes x and y coordinates of a pixel and produces *color*. It's used to create 2D array of *colors* that corresponds to every pixel that is going to be rendered next by `draw.ml` (or saved as an image by `toimage.ml`)
+
+Let's focus now what is being done in **raytracer** function.
+
+First **(x, y)** pixel coordinates are being traslated by **Screen** (from `screens.ml`) into *ray*. So in order to find color for (x, y) pixel, we need to know where the *ray* hit. 
+
+The *ray* is being passed to **Structure** (from `structures.ml`). It's job is to test this ray against every **Object** (from `objects.ml`) to determine closest *intersection* with the *ray*. 
+
+### Core
+
+
+### Miscellaneous
+
 ---
 
 # TODO
@@ -92,3 +111,12 @@ Others:
 
 ## Descoped
 - [ ] merge objects and lights
+
+---
+
+Misc:
+```bash
+for x in $(ls cfgs | grep .json | cut -d "." -f1); do ./run.native $x $x & done;
+```
+
+reflections -> m1
