@@ -32,7 +32,7 @@ module CameraUtil = struct
   let create (center, forward, up, distance_from_screen) = 
     let forward = Vector.normalize forward in
     let up = Vector.normalize up in
-    assert (Vector.dot up forward < Util.epsilon);
+    (* assert (Vector.dot up forward < Util.epsilon); *)
     let right = Vector.cross up forward in
     let distance = abs_float distance_from_screen in
     let screen_center = Vector.add center (Vector.mul distance forward) in
