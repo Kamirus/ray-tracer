@@ -1,15 +1,17 @@
 {
   "settings": {
     "defaultColor": [0, 0, 0],
-    "#samples": 20
+    "#samples": 1,
+    "maxRecursion": 25
   },
   "screen": {
     "type": "PerpectiveScreen",
     "camera": {
+      "sensor": [0.8,0.8],
       "center": [0, 23, -19],
       "forward": [0, -0.7, 1],
       "up": [0, 1, 0.7],
-      "distanceFromScreen": 40
+      "distanceFromScreen": 28
     },
     "resolution": [1920, 1080],
     "unitsPerPixel": 0.06
@@ -22,14 +24,35 @@
       "type": "Plane",
       "point": [0, 0, 20],
       "normal": [0, 0, 1],
-      "albedo": 0.50,
+      "albedo": 1,
       "color": [255, 255, 255]
     },
     {
       "type": "Plane",
       "point": [0, 0, -20],
       "normal": [0, 0, 1],
-      "albedo": 0.50,
+      "albedo": 1,
+      "color": [255, 255, 255]
+    },
+    {
+      "type": "Plane",
+      "point": [-80, 0, -20],
+      "normal": [1, 0, 0],
+      "albedo": 1,
+      "color": [255, 255, 255]
+    },
+    {
+      "type": "Plane",
+      "point": [80, 0, -20],
+      "normal": [1, 0, 0],
+      "albedo": 1,
+      "color": [255, 255, 255]
+    },
+    {
+      "type": "Plane",
+      "point": [0, -10, 0],
+      "normal": [0, 1, 0],
+      "albedo": 0,
       "color": [255, 255, 255]
     },
     {
@@ -70,9 +93,10 @@
   ],
   "lights": [
     {
-      "type": "LightPoint",
-      "center": [0, 100, 0],
-      "intensity": 140000,
+      "type": "LightSphere",
+      "center": [0, 300, 0],
+      "radius": 10,
+      "intensity": 1100000,
       "color": [255, 255, 255]
     }
   ]

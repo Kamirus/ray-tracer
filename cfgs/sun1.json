@@ -4,9 +4,9 @@
     "maxRecursion": 10,
     "indirectIllumination": {
       "turned on": true,
-      "#samples": 5
+      "#samples": 3
     },
-    "#samples": 50
+    "#samples": 1
   },
   "screen": {
     "type": "PerpectiveScreen",
