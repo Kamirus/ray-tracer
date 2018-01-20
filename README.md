@@ -58,7 +58,16 @@ Let's focus now what is being done in **raytracer** function.
 
 First **(x, y)** pixel coordinates are being traslated by **Screen** (from `screens.ml`) into *ray*. So in order to find color for (x, y) pixel, we need to know where the *ray* hit. 
 
-The *ray* is being passed to **Structure** (from `structures.ml`). It's job is to test this ray against every **Object** (from `objects.ml`) to determine closest *intersection* with the *ray*. 
+The *ray* is being passed to **Structure** (from `structures.ml`). It's job is to test this ray against every **Object** (from `objects.ml`) to determine closest *intersection* with the *ray*. Now having point of *intersection* with the closest **Object** we have to tell what's color out there. Here we need to separately calculate **reflection**, **direct** and **indirect illumination**.
+
+Computing **reflection** is pretty straight forward, we just produce reflected ray (according to law of reflection) and recursively calculate the color.
+
+To calculate **direct illumination** we need to know which **Light** (from `lights.ml`) contributes light directly at the intersection point. Then shading is applied to the resulted color. 
+
+**indirect illumination** is acquired by shooting many random rays, tracing them recursively to get colors and averaging the result.
+
+These three parts of the color are combined together based on albedo (the ratio of reflected light to received) of the **Object** 
+
 
 ### Core
 
