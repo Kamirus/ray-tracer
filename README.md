@@ -46,11 +46,7 @@ Others:
 - rendered picture on screen is being rerender every 1s to apply changed settings without restarting program
 
 
-## Architecture
-
-This project is divided into two parts: `lib` and `src`. First contains modules which interfaces are unlikely to change, so these can be considered as simple building blocks (like vectors, colors, rays, etc.).
-
-When rendering picture on screen, the **flow of control** is as follows. 
+## Flow of control
 
 Simple command line handler in `run.ml` orders `parse_cfg.ml` to parse scene description file, which as a result returns **raytracer** function that takes x and y coordinates of a pixel and produces *color*. It's used to create 2D array of *colors* that corresponds to every pixel that is going to be rendered next by `draw.ml` (or saved as an image by `toimage.ml`)
 
@@ -66,13 +62,39 @@ To calculate **direct illumination** we need to know which **Light** (from `ligh
 
 **indirect illumination** is acquired by shooting many random rays, tracing them recursively to get colors and averaging the result.
 
-These three parts of the color are combined together based on albedo (the ratio of reflected light to received) of the **Object** 
+These three parts of the color are combined together based on albedo (the ratio of reflected light to received) of the **Object**.
 
+
+## Architecture
+
+This project is divided into two parts: `lib` and `src`. First contains modules which interfaces are unlikely to change, so these can be considered as simple building blocks (like vectors, colors, rays, etc.).
 
 ### Core
 
+Every module (example: `foos.ml`) listed below contains signature (`FOO`) and one or many implementations (`FuzzyFoo`, `Foo`, ...). 
+
+In every signature there's `create` function that returns structured information about created 'thing', which is necessary for every other function in signature (it's like constructing object in OOP language, but the result is just *state* (fields) without methods) (`create : ... -> Foo.t`).
+
+Now in order to bound created state (`Foo.t`) with it's implementation (`module Foo`), there is function that takes these two values and encapsulates them in the **module instance** (of type `FOO_INSTANCE`)
+
+- `raytracers.ml` - has one constructor function that takes number of samples (from supersampling) and instance of **Screen** and **Structure**. Antialiasing is implemented here. Every sample is traced independently, then re
+
+- `screens.ml` -
+
+- `cameras.ml` -
+
+- `structures.ml` -
+
+- `objects.ml` -
+
+- `lights.ml` -
 
 ### Miscellaneous
+
+run
+parse_cfg
+draw
+toimage
 
 ---
 
