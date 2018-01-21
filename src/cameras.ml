@@ -22,7 +22,9 @@ let create_instance (type a) (module C : CAMERA with type config = a) cfg =
 
 (* --- *)
 
-module CameraUtil = struct
+(* Since there's no inheritance of implementation for modules
+   I extracted common implementation here. *)
+module CameraCommon = struct
   type camera_t = { center : Point.t
                   ; screen_center : Point.t
                   ; forward : Vector.t
@@ -41,10 +43,11 @@ module CameraUtil = struct
   let shoot ~center ~screen_center ~right ~up (x, y) = 
     let to_right = Vector.mul x right in
     let to_up = Vector.mul y up in
-    let point = screen_center 
-                |> Vector.add to_right
-                |> Vector.add to_up in
-    Ray.create center (Vector.sub point center)
+    let destination = screen_center 
+                      |> Vector.add to_right
+                      |> Vector.add to_up in
+    let direction_center_to_dest = Vector.sub destination center in
+    Ray.create center direction_center_to_dest
 end
 
 
@@ -53,9 +56,9 @@ type camera_cfg = Point.t * Vector.t * Vector.t * float
 module Camera : CAMERA
   with type config = camera_cfg
 = struct
-  module C = CameraUtil
+  module C = CameraCommon
   type config = camera_cfg
-  type t = CameraUtil.camera_t
+  type t = CameraCommon.camera_t
 
   let create = C.create
 
@@ -69,19 +72,21 @@ type sensor_cfg = camera_cfg * float * float
 module Sensor : CAMERA
   with type config = sensor_cfg
 = struct
-  module C = CameraUtil
+  module C = CameraCommon
   type config = sensor_cfg
-  type t = { camera : CameraUtil.camera_t
+  type t = { camera : CameraCommon.camera_t
            ; width : float
            ; height : float }
 
   let create (camera_cfg, width, height) =
-    let camera = CameraUtil.create camera_cfg in
+    let camera = CameraCommon.create camera_cfg in
     { camera; width; height }
 
   let random_xy { width; height } =
-    let x = Random.float width  -. width  /. 2. in
-    let y = Random.float height -. height /. 2. in
+    (* range: [-a/2, a/2] *)
+    let rand_range a = Random.float a  -. a  /. 2. in
+    let x = rand_range width in
+    let y = rand_range height in
     (x, y)
 
   let random_source ({ camera = { C.center; right; up } } as t) =

@@ -45,6 +45,7 @@ Others:
 - **perspective screen**
 - rendered picture on screen is being rerender every 1s to apply changed settings without restarting program
 
+---
 
 ## Flow of control
 
@@ -71,17 +72,24 @@ This project is divided into two parts: `lib` and `src`. First contains modules 
 
 ### Core
 
-Every module (example: `foos.ml`) listed below contains signature (`FOO`) and one or many implementations (`FuzzyFoo`, `Foo`, ...). 
+Every module (example: `foos.ml`) listed below contains signature (`FOO`) and one or many it's implementations (`FuzzyFoo`, `Foo`, ...). 
 
-In every signature there's `create` function that returns structured information about created 'thing', which is necessary for every other function in signature (it's like constructing object in OOP language, but the result is just *state* (fields) without methods) (`create : ... -> Foo.t`).
+In every signature there's `create` function that returns structured information about created 'thing'. That is necessary for every other function in the signature (it's like constructing object in OOP language, but the result is just the *state* (fields) without methods) (`create : ... -> Foo.t`).
 
-Now in order to bound created state (`Foo.t`) with it's implementation (`module Foo`), there is function that takes these two values and encapsulates them in the **module instance** (of type `FOO_INSTANCE`)
+Now in order to bound created state (`Foo.t`) with it's implementation (`module Foo`), there is a function that takes these two values and encapsulates them in the **module instance** (of type `FOO_INSTANCE`)
 
-- `raytracers.ml` - has one constructor function that takes number of samples (from supersampling) and instance of **Screen** and **Structure**. Antialiasing is implemented here. Every sample is traced independently, then re
+- `raytracers.ml` - has one constructor function that takes number of samples (from supersampling) and instance of **Screen** and **Structure**. Antialiasing is implemented here. Every sample is traced independently, then result is averaged.
 
-- `screens.ml` -
+- `cameras.ml`
+  - They are used by **Screen**s to get (realistic) perspective view. **Camera** produces rays, so it needs to know from where and toward which point to shoot. Source is known. Destination point is calculated based on 2D vector from screen center to the desired point.
+  - There are two implementations: first (named `Camera`) shoots every point from single point, second (`Sensor`) picks source randomly from it's surface. 
+  - Every **Camera** is described by it's *center point*, *forward* vector which tells in which direction **Camera** is looking. Similarly *up* vector indicated where is the top. Lastly *distance from screen* to calculate *screen center*.
+  - For `Sensor` *distance from screen* describes focus distance.
 
-- `cameras.ml` -
+- `screens.ml`
+  - **Screen** takes pixel coordinates and first translates them to the point in 3D space (where scene lives).
+  - There is only one **Screen** implementation that uses **Camera** to actually shot the ray.
+  - Another important issue is since pixel is not just a point in 3D space, how to pick one? It's being done randomly.
 
 - `structures.ml` -
 

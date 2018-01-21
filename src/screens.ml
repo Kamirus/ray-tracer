@@ -2,7 +2,11 @@ module type SCREEN = sig
   type t
 
   val create : t -> t
-  val pixel_ray : t -> int -> int -> Ray.t option
+
+  (** [pixel_ray x y] takes x and y coordinates of the screen
+      and translates it to the ray that needs to be traces in order
+      to determine the color for (x, y) pixel *)
+  val pixel_ray : t -> int -> int -> Ray.t
 end
 
 module type SCREEN_INSTANCE = sig
@@ -18,14 +22,10 @@ let create_instance (type a) (module S : SCREEN with type t = a) t =
 
 (* --- *)
 
-(** [valid_xy (x_max, y_max) x y] bottom left corner is (0,0) point *)
-let valid_xy (x_max, y_max) x y = 
-  0 <= x && x < x_max && 0 <= y && y < y_max
-
-(** [vec2d_to_pixel x_max y_max ratio x y] 
+(** [vec2d_from_center_to_pixel x_max y_max ratio x y] 
     translate (x,y) from (0,0) in the bottom left corner 
     to the center of the screen *)
-let vec2d_to_pixel x_max y_max ratio x y =
+let vec2d_from_center_to_pixel x_max y_max ratio x y =
   let one x x_max =
     (* from x perspective *)
     (* left bottom corner of the screen is 0,0 *)
@@ -37,6 +37,7 @@ let vec2d_to_pixel x_max y_max ratio x y =
     x |> float_of_int |> (+.) off |> ( *.) ratio
   in
   (one x x_max, one y y_max)
+
 (* --- *)
 
 module MakePerspectiveScreen (C : Cameras.CAMERA) : SCREEN 
@@ -51,9 +52,6 @@ module MakePerspectiveScreen (C : Cameras.CAMERA) : SCREEN
     (camera, abs x_max, abs y_max, abs_float ratio)
 
   let pixel_ray (camera, x_max, y_max, ratio) x y = 
-    if not @@ valid_xy (x_max, y_max) x y then None
-    else
-      let xy = vec2d_to_pixel x_max y_max ratio x y in
-      let ray = C.shoot camera xy in
-      Some ray
+    let to_xy = vec2d_from_center_to_pixel x_max y_max ratio x y in
+    C.shoot camera to_xy
 end
