@@ -6,7 +6,11 @@ let max_rec = 10
 let valid t = 
   epsilon <= t && t <= t_max
 
-(** calculate random direction *)
+(** [rand_dir ?cosmin normal]
+    creates random vector-direction so that
+    result is tilted relative to [normal] by angle in range [0, A]
+    where A is described by cosA in range [cosmin, 1]
+    example: default cosmin=0 yields results tilted by max 90deg *)
 let rand_dir ?(cosmin=0.) normal =
   let coordinate_system n =
     let (x, y, z) = Vector.values n in

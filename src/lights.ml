@@ -1,9 +1,13 @@
 module type LIGHT = sig
   include Objects.OBJECT
 
-  (* val create : t -> t *)
-  val calc_color : t -> Point.t -> Color.t
+  (** [ray_to_light t point]
+      produces ray from the light to destination [point] *)
   val ray_to_light : t -> Point.t -> Ray.t
+
+  (** [calc_color t point]
+      calculate how much light reaches the given [point] *)
+  val calc_color : t -> Point.t -> Color.t
 end
 
 module type LIGHT_INSTANCE = sig
@@ -25,9 +29,6 @@ module Sun : LIGHT
   with type t = sun_t
 = struct
   type t = sun_t
-
-  let get_color { color } =
-    color
 
   let intersect { dir; color } ray =
     None
@@ -51,9 +52,6 @@ module LightPoint : LIGHT
   with type t = light_point_t
 = struct
   type t = light_point_t
-
-  let get_color { color } =
-    color
 
   let intersect t ray =
     None
@@ -82,9 +80,6 @@ module LightSphere : LIGHT
 = struct
   type t = light_sphere_t
 
-  let get_color { color } =
-    color
-
   let intersect { color; center; radius } ray =
     match Ray.distance_to_sphere ray ~center ~radius with
     | None -> None
@@ -92,8 +87,7 @@ module LightSphere : LIGHT
       let hit_point = Ray.calc_point ray d in
       (* inverted normal pointing center *)
       let normal = Vector.direction_from_to hit_point center in
-      let albedo = 0. in (* nasty workaround to prevent indirect illumination and reflection *)
-      Some (Intersection.create ~ray ~d ~color ~normal ~albedo)
+      Some (Intersection.create ~ray ~d ~color ~normal ~albedo:0.)
 
   let create t = 
     t
@@ -111,6 +105,19 @@ module LightSphere : LIGHT
     else
       let dir = Vector.normalize vec in
 
+      (* Calculate how much dir can be tilted to still hit sphere *)
+      (* imagine/draw 2d circle and point outside
+         connect circle center and this point
+         draw one tangent to the circle going through the point
+         in intersection point there is right angle ( <)rip )
+         we've got right triangle here
+         let's say that angle at the point is A
+         we are interested in cosA, we know d and r, need third
+         third = sqrt( d^2 - r^2)
+         cosA  = sqrt( d^2 - r^2) / d    =
+               = sqrt((d^2 - r^2) / d^2) =
+               = sqrt( 1   - r^2  / d^2)
+         that's the min cos we are interested in *)
       let cosmin = 1. -. radius ** 2. /. d ** 2. |> sqrt in
       let dir = Util.rand_dir dir ~cosmin in
 

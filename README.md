@@ -91,11 +91,15 @@ Now in order to bound created state (`Foo.t`) with it's implementation (`module 
   - There is only one **Screen** implementation that uses **Camera** to actually shot the ray.
   - Another important issue is since pixel is not just a point in 3D space, how to pick one? It's being done randomly.
 
+- `objects.ml` - They can determine if given ray intersects with them. For convenience every needed value for further processing is being packed in the *intersection* record in case of the ray actually hits.
+
+- `lights.ml` - are extensions of objects, so lights can be hit by rays and as a consequence become visible. 
+  - Additionally they implement two functions:
+    - First is used to produce ray from the light to the given point. 
+    - Second calculates how much light reaches the given point (simply returns *color* which is then multiplied by the *color* of the object)
+  - `LightSphere` is the special **Light**. It's implementation allows for soft shadows, that combined with supersampling produces better results. This effect is acquired by shooting ray to the random point on the sphere (details in `util.ml` and even more `LightSphere.ray_to_light`).
+
 - `structures.ml` -
-
-- `objects.ml` -
-
-- `lights.ml` -
 
 ### Miscellaneous
 
