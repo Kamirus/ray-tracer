@@ -99,14 +99,16 @@ Now in order to bound created state (`Foo.t`) with it's implementation (`module 
     - Second calculates how much light reaches the given point (simply returns *color* which is then multiplied by the *color* of the object)
   - `LightSphere` is the special **Light**. It's implementation allows for soft shadows, that combined with supersampling produces better results. This effect is acquired by shooting ray to the random point on the sphere (details in `util.ml` and even more `LightSphere.ray_to_light`).
 
-- `structures.ml` -
+- `structures.ml` - Generally **Structure** keeps every **Object** and **Light** (`ListStructure` in two lists). It's job was described already in [Flow of control](#flow-of-control).
+  - **Structure** is not calculating needlessly colors that would be then be multiplated by 0. 
+  - Global illumination is calculated with depth of 2 levels
+  - Shading is applied after direct color is computed.
 
 ### Miscellaneous
 
-run
-parse_cfg
-draw
-toimage
+- `parse_cfg.ml` - uses Yojson module to parse json description scene. General programming style is completly different here. Since Yojson uses exceptions to handle wrong data in json file, so do I. Except that I feel that desing is pretty clean. Functions are composed of others that parses more specific values. In order to pick the right parsing function for different types of objects I used simple strategy pattern with *switch on string value*. I do recommend taking a look for details to source file
+- `draw.ml` - performs actual rednering to screen. It's main function takes function that reads cfg file, parses and generates 2D array of colors ready to be rendered. Additionally every 1 second this function is called again to rerender picture applying new settings from cfg file.
+- `toimage.ml` - saves picture to file under `pics/` directory
 
 ---
 
@@ -114,8 +116,7 @@ toimage
 
 ## Key features
 - [x] configuration file
-- [ ] raport
-- [ ] documentation
+- [x] detailed readme
 - [x] update cfg specification
 - [x] perspective camera
 - [x] dump to img file
@@ -157,9 +158,7 @@ toimage
 
 ---
 
-Misc:
+render every cfgs:
 ```bash
 for x in $(ls cfgs | grep .json | cut -d "." -f1); do ./run.native $x $x & done;
 ```
-
-reflections -> m1

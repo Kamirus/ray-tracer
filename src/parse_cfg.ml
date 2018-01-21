@@ -2,28 +2,33 @@ module U = Yojson.Basic.Util
 
 (* Basic building blocks *)
 
+(** [get name f json] take value under [name] key from [json] and transform it using [f] *)
 let get name f json =
   try U.member name json |> f with
   | Failure err -> failwith @@ Printf.sprintf "%s\nduring parsing '%s'" err name
 
+(** [get_list name f json] similar to get, but applies [f] to every element in the list *)
 let get_list name f json = 
   try get name U.to_list json |> List.map f with
   | Failure err -> failwith @@ Printf.sprintf "%s\nduring parsing list '%s'" err name
 
 (* Custom convertions *)
 
+(** parse list of two elements and transform them using [f] *)
 let to_pair f json = 
   let take_pair = function
     | x :: y :: _ -> (x, y)
     | _ -> failwith "not enough for take_pair" in
   json |> U.to_list |> List.map f |> take_pair
-
+  
+(** parse list of three elements and transform them using [f] *)
 let to_three f json = 
   let take_3 = function
     | x :: y :: z :: _ -> (x, y, z)
     | _ -> failwith "not enough for take_3" in
   json |> U.to_list |> List.map f |> take_3
 
+(** allows writting integer values where floats are needed *)
 let to_float json = 
   try begin
     try U.to_float json with
@@ -33,17 +38,21 @@ let to_float json =
 
 (* Parsing basic types *)
 
+(* get type of parsing object *)
 let typ json =
   get "type" U.to_string json
 
+(* parse value under [name] key in [json] as point *)
 let point name json =
   let x, y, z = json |> get name (to_three to_float) in
   Point.create x y z
 
+(* parse value under [name] key in [json] as vector *)
 let vector name json =
   let x, y, z = json |> get name (to_three to_float) in
   Vector.create x y z
-
+  
+(* parse value under [name] key in [json] as color *)
 let color ?(name="color") json =
   let r,g,b = json |> get name (to_three U.to_int) in
   Color.create r g b
@@ -75,6 +84,7 @@ let parse_settings json =
 
 (* Parsing compound objects *)
 
+(* parse [json] as camera instance *)
 let camera_instance json = 
   let camera_cfg json = 
     let c = json |> point "center" in
@@ -91,6 +101,7 @@ let camera_instance json =
     Cameras.create_instance (module Cameras.Sensor)
       (camera_cfg json, width, height)
 
+(* parse [json] as camera instance *)
 let screen_instance json = 
   let perspective_screen json = 
     let (module C : Cameras.CAMERA_INSTANCE) = 
@@ -106,7 +117,8 @@ let screen_instance json =
     | other -> failwith @@ "screen type: " ^ other ^ " not supported"
   in
   try main json with Failure err -> failwith @@ Printf.sprintf "%s\nduring parsing screen '%s'" err @@ typ json
-
+  
+(* parse [json] as structure instance *)
 let structure_instance ~objects ~lights 
     {default_color; max_rec; no_indirect_samples; is_indirect} json =
   let main json =
@@ -118,6 +130,7 @@ let structure_instance ~objects ~lights
   in
   try main json with Failure err -> failwith @@ Printf.sprintf "%s\nduring parsing structure '%s'" err @@ typ json
 
+(* parse [json] as object instance *)
 let object_instance json = 
   let plane json = 
     let point = json |> point "point" in
@@ -141,6 +154,7 @@ let object_instance json =
   in
   try main json with Failure err -> failwith @@ Printf.sprintf "%s\nduring parsing object '%s'" err @@ typ json
 
+(* parse [json] as light instance *)
 let light_instance json = 
   let sun json = 
     let dir = json |> vector "direction" in
@@ -171,6 +185,7 @@ let light_instance json =
   in 
   try main json with Failure err -> failwith @@ Printf.sprintf "%s\nduring parsing light '%s'" err @@ typ json
 
+(* cast list of lights to objects and append them to [acc] *)
 let cast_list ?(acc=[]) lights =
   let cast (module L : Lights.LIGHT_INSTANCE) = 
     Objects.create_instance (module L.Light) L.this
