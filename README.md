@@ -1,9 +1,11 @@
 # Ray Tracer
 
-
 ## What is it?
 The program is used to render the 3D scene view. Description of the scene is loaded from input file. Rendering technique: [**ray tracing**](https://en.wikipedia.org/wiki/Ray_tracing_(graphics))
 
+![wallpaper](./pics/dof/dof1_1000ss.png)
+
+More pre-rendered pictures in the `/pics` directory
 
 ## How to build and run?
 - Get *ocaml* and *opam* installed
