@@ -10,4 +10,6 @@ let main ~name ~pixels =
       Image.write_rgb image x y r g b
     done
   done;
-  ImageLib.PNG.write_png name image
+  let bytes = ImageLib.PNG.bytes_of_png image in
+  let out = open_out name in
+  output_bytes out bytes
